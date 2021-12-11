@@ -8,6 +8,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.periculum.Periculum
 import tech.smallwonder.smsextract.ui.theme.SmsExtractTheme
 
 class MainActivity : ComponentActivity() {

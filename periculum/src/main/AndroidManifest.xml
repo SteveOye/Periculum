@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.periculum">
 
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application>
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+
+            <!-- Automatically run MyInitializer at app startup -->
+            <meta-data
+                android:name="com.periculum.internal.utils.PericulumInitializer"
+                android:value="androidx.startup" />
+        </provider>
+    </application>
 </manifest>
