@@ -8,11 +8,12 @@ import android.os.Build
 import android.telephony.TelephonyManager
 import android.util.Log
 import com.google.gson.Gson
-import com.periculum.internal.api.PericulumApi
+import com.periculum.internal.api.RetrofitInstance
 import com.periculum.internal.models.*
 import com.periculum.internal.utils.PericulumDependency
 import com.periculum.internal.utils.Utils
-import com.periculum.internal.utils.getAppName
+import com.periculum.internal.utils.getProjectName
+import com.periculum.models.ErrorType
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,19 +26,33 @@ internal class AnalyticsRepository {
         phoneNumber: String,
         bvn: String,
         token: String
-    ): AnalyticsResponseModel? {
-
-        val periculumApi = PericulumApi.create()
-            .analytics(token = token, xTenant = "Nucleusis", analyticsBody = getAnalyticsData(phoneNumber, bvn))
+    ): AnalyticsResponseModel {
+        val locationResult = LocationRepository().getUserLocationData()
+        if (locationResult.errorType != ErrorType.Null) {
+            return AnalyticsResponseModel(locationResult.message, true, locationResult.errorType)
+        }
+        return try {
+            val response = RetrofitInstance.api.postAnalytics(token = token, xTenant = "Nucleusis", analyticsBody = getAnalyticsData(phoneNumber, bvn, locationModel = locationResult.locationModel!!))
+            val data = response.execute()
+            if(data.isSuccessful) {
+                AnalyticsResponseModel(Gson().toJson(data.body()!!), isError = false)
+            }else {
+                AnalyticsResponseModel(responseBody = data.message(), true, errorType = ErrorType.NetworkRequest)
+            }
+        } catch (e: Exception) {
+            AnalyticsResponseModel(responseBody = "Error occurred.", true, errorType = ErrorType.NetworkRequest)
+        }
+        /*val periculumApi = PericulumApi.create()
+            .postAnalytics(token = token, xTenant = "Nucleusis", analyticsBody = getAnalyticsData(phoneNumber, bvn))
         TODO("Try to Change the response to pure String rather than AnaylyticsResponseModel")
         try {
             return periculumApi.execute().body()!!
         }catch (e: Exception) {
             return null
-        }
+        }*/
     }
 
-    private suspend fun getAnalyticsData(phoneNumber: String, bvn: String): AnalyticsModel {
+    private suspend fun getAnalyticsData(phoneNumber: String, bvn: String, locationModel: LocationModel): AnalyticsModel {
         val packageManager = PericulumDependency.getApplicationContext().packageManager
         val packageInfo = packageManager.getPackageInfo(
             PericulumDependency.getApplicationContext().packageName,
@@ -45,7 +60,7 @@ internal class AnalyticsRepository {
         )
         return AnalyticsModel(
             statementName = "Kazeem ${Random.nextFloat()}",
-            appName = PericulumDependency.getApplicationContext().getAppName(),
+            appName = PericulumDependency.getApplicationContext().getProjectName(),
             bundleId = PericulumDependency.getApplicationContext().packageName,
             version = packageInfo.versionName,
             device = getDeviceInfo(),
@@ -56,7 +71,7 @@ internal class AnalyticsRepository {
                     bvn = bvn
                 )
             ),
-            location = LocationRepository().getUserLocationData()
+            location = locationModel
         )
     }
 

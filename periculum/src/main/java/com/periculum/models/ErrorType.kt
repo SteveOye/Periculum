@@ -5,6 +5,7 @@ enum class ErrorType {
     SmsPermissionError,
     LocationPermissionError,
     LocationNotEnabledError,
-    Error,
+    UnknownError,
+    NetworkRequest,
     Null
 }

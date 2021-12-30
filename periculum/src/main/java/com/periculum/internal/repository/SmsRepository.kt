@@ -2,7 +2,6 @@ package com.periculum.internal.repository
 
 import android.database.Cursor
 import android.net.Uri
-import android.util.Log
 import com.periculum.internal.models.SmsDataModel
 import com.periculum.internal.utils.PericulumDependency
 import java.util.*

@@ -1,6 +1,8 @@
 package com.periculum.internal.models
 
-internal data class AnalyticsResponseModel(
+import com.periculum.models.ErrorType
+
+/*internal data class AnalyticsResponseModel(
     val key: Int,
     val name: String?,
     val clientBvn: String?,
@@ -17,7 +19,9 @@ internal data class AnalyticsResponseModel(
     val behavioralAnalysis: BehavioralAnalysisModel?,
     val cashFlowAnalysis: CashFlowAnalysisModel,
     val incomeAnalysis : IncomeAnalysisModel?
-)
+)*/
+
+internal data class AnalyticsResponseModel(val responseBody: String = "", val isError: Boolean, val errorType: ErrorType = ErrorType.Null)
 
 internal data class SpendAnalysisModel(
     val averageMonthlySpendOnTransfer: Double?,

@@ -19,11 +19,7 @@ import android.text.TextUtils
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 
 import android.net.wifi.WifiManager
-
-import android.net.NetworkInfo
 import android.util.Log
-
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.test.core.app.ApplicationProvider
 import java.lang.Exception
 import java.lang.StringBuilder
@@ -187,7 +183,7 @@ internal class Utils {
                 }
             }
         } catch (ex: Exception) {
-            Log.e("IP Address", "getLocalIpAddress", ex)
+//            Log.e("IP Address", "getLocalIpAddress", ex)
         }
         return null
     }
@@ -223,4 +219,4 @@ internal class Utils {
     }
 }
 
-fun Context.getAppName(): String = applicationInfo.loadLabel(packageManager).toString()
+fun Context.getProjectName(): String = applicationInfo.loadLabel(packageManager).toString()
