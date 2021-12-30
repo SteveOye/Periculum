@@ -1,7 +1,6 @@
 package com.periculum.internal.utils
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.startup.Initializer
 
 internal class PericulumInitializer : Initializer<PericulumDependency> {

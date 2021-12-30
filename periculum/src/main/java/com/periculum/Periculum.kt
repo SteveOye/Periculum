@@ -1,25 +1,16 @@
 package com.periculum
 
-import com.periculum.internal.repository.LoginRepository
+import com.periculum.internal.PericulumManager
+import com.periculum.models.Response
+import com.periculum.models.VendorData
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object Periculum {
 
-    fun logIn(merchantId: String, secretKey: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            LoginRepository().logIn(
-                merchantId,
-                secretKey,
-                onSuccess = {
-
-                },
-                onFailure = {
-
-                }
-            )
-        }
+    suspend fun start(
+        vendorData: VendorData
+    ): Response = withContext(Dispatchers.IO) {
+        return@withContext PericulumManager().startProcess(vendorData)
     }
-
 }
