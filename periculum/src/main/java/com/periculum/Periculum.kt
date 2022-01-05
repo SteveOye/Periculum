@@ -15,9 +15,9 @@ object Periculum {
         GlobalScope.launch(Dispatchers.Main) {
             val response = PericulumManager().startProcess(vendorData)
             if(response.isError) {
-                periculumCallback.onSuccess(Response(response.message, isError = false))
-            }else {
                 periculumCallback.onError(response.message, response.errorType)
+            }else {
+                periculumCallback.onSuccess(Response(response.message, isError = false))
             }
         }
     }

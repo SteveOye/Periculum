@@ -6,17 +6,13 @@ import android.content.pm.PackageManager
 import android.os.BatteryManager
 import android.os.Build
 import android.telephony.TelephonyManager
-import android.util.Log
-import com.google.gson.Gson
 import com.periculum.internal.api.RetrofitInstance
 import com.periculum.internal.models.*
 import com.periculum.internal.utils.PericulumDependency
 import com.periculum.internal.utils.Utils
 import com.periculum.internal.utils.getProjectName
 import com.periculum.models.ErrorType
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.periculum.models.Response
 import kotlin.random.Random
 
 
@@ -35,21 +31,31 @@ internal class AnalyticsRepository {
             val response = RetrofitInstance.api.postAnalytics(token = token, xTenant = "Nucleusis", analyticsBody = getAnalyticsData(phoneNumber, bvn, locationModel = locationResult.locationModel!!))
             val data = response.execute()
             if(data.isSuccessful) {
-                AnalyticsResponseModel(Gson().toJson(data.body()!!), isError = false)
+                if (data.body()!!.has("key")) {
+                    AnalyticsResponseModel(data.body()!!["key"].asString, isError = false)
+                } else {
+                    AnalyticsResponseModel(
+                        responseBody = "Error occurred while getting statement key",
+                        true,
+                        errorType = ErrorType.NetworkRequest
+                    )
+                }
             }else {
                 AnalyticsResponseModel(responseBody = data.message(), true, errorType = ErrorType.NetworkRequest)
             }
         } catch (e: Exception) {
-            AnalyticsResponseModel(responseBody = "Error occurred.", true, errorType = ErrorType.NetworkRequest)
+            if (!Utils().isInternetConnected()) {
+                AnalyticsResponseModel(responseBody = "Internet Connection Required", true, errorType = ErrorType.InternetConnectionError)
+            }else if (!Utils().isSmsPermissionGranted()) {
+                AnalyticsResponseModel(responseBody = "Sms Permission Required", true, errorType = ErrorType.SmsPermissionError)
+            }else if (!Utils().isLocationPermissionGranted()) {
+                AnalyticsResponseModel(responseBody = "Access Location Permission Required", true, errorType = ErrorType.LocationPermissionError)
+            }else if (!Utils().isLocationEnabled()) {
+                AnalyticsResponseModel(responseBody = "Location not enabled.", true, errorType = ErrorType.LocationNotEnabledError)
+            }else {
+                AnalyticsResponseModel(responseBody = "Error occurred.", true, errorType = ErrorType.NetworkRequest)
+            }
         }
-        /*val periculumApi = PericulumApi.create()
-            .postAnalytics(token = token, xTenant = "Nucleusis", analyticsBody = getAnalyticsData(phoneNumber, bvn))
-        TODO("Try to Change the response to pure String rather than AnaylyticsResponseModel")
-        try {
-            return periculumApi.execute().body()!!
-        }catch (e: Exception) {
-            return null
-        }*/
     }
 
     private suspend fun getAnalyticsData(phoneNumber: String, bvn: String, locationModel: LocationModel): AnalyticsModel {

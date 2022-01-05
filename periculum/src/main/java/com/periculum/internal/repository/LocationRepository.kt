@@ -35,18 +35,16 @@ internal class LocationRepository {
                     LocationServices.getFusedLocationProviderClient(PericulumDependency.getApplicationContext())
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location ->
-                        if (location != null) {
-                            accuracy = location.accuracy
-                            altitude = location.altitude
-                            bearing = location.bearing
-                            latitude = location.latitude
-                            longitude = location.longitude
-                            provider = location.provider
-                            speed = location.speed
-                            time = location.time
-                        }
+                        accuracy = location.accuracy
+                        altitude = location.altitude
+                        bearing = location.bearing
+                        latitude = location.latitude
+                        longitude = location.longitude
+                        provider = location.provider
+                        speed = location.speed
+                        time = location.time
                     }
-                for (count in 0..3) {
+                for (count in 0..4) {
                     if (latitude == -0.0) {
                         delay(2000)
                     } else {
