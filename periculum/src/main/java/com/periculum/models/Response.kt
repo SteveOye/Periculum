@@ -1,3 +1,3 @@
 package com.periculum.models
 
-data class Response (val message: String = "", val isError: Boolean, val errorType: ErrorType = ErrorType.Null)
+data class Response (val message: String = "", val responseBody: String?, val isError: Boolean, val errorType: ErrorType = ErrorType.Null)

@@ -3,9 +3,12 @@ package com.periculum.internal.repository
 import android.content.Context
 import android.content.Context.BATTERY_SERVICE
 import android.content.pm.PackageManager
+import android.hardware.biometrics.BiometricPrompt
 import android.os.BatteryManager
 import android.os.Build
 import android.telephony.TelephonyManager
+import android.util.Log
+import com.google.gson.Gson
 import com.periculum.internal.api.RetrofitInstance
 import com.periculum.internal.models.*
 import com.periculum.internal.utils.PericulumDependency
@@ -28,14 +31,14 @@ internal class AnalyticsRepository {
             return AnalyticsResponseModel(locationResult.message, true, locationResult.errorType)
         }
         return try {
-            val response = RetrofitInstance.api.postAnalytics(token = token, xTenant = "Nucleusis", analyticsBody = getAnalyticsData(phoneNumber, bvn, locationModel = locationResult.locationModel!!))
+            val response = RetrofitInstance.api.postAnalytics(token = "Bearer $token", analyticsBody = getAnalyticsData(phoneNumber, bvn, locationModel = locationResult.locationModel!!))
             val data = response.execute()
             if(data.isSuccessful) {
                 if (data.body()!!.has("key")) {
                     AnalyticsResponseModel(data.body()!!["key"].asString, isError = false)
                 } else {
                     AnalyticsResponseModel(
-                        responseBody = "Error occurred while getting statement key",
+                        responseBody = "Error occurred while getting statement key.",
                         true,
                         errorType = ErrorType.NetworkRequest
                     )

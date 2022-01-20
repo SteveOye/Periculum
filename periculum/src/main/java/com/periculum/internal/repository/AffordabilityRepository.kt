@@ -11,7 +11,7 @@ import com.periculum.models.Response
 
 internal class AffordabilityRepository {
 
-    internal suspend fun postAffordabilityDataToServer(affordabilityModel: AffordabilityModel): AffordabilityResponseModel {
+    internal suspend fun postAffordabilityDataToServer(affordabilityModel: AffordabilityModel, token: String): AffordabilityResponseModel {
         return try {
             if (!Utils().isInternetConnected()) {
                 AffordabilityResponseModel(
@@ -21,7 +21,7 @@ internal class AffordabilityRepository {
                 )
             } else {
                 val response = RetrofitInstance.api.postAffordabilityData(
-                    "Nucleusis",
+                    token = "Bearer $token",
                     affordabilityModel = affordabilityModel
                 )
                 val data = response.execute()
@@ -61,7 +61,6 @@ internal class AffordabilityRepository {
                     errorType = ErrorType.LocationNotEnabledError
                 )
             }else {
-                Log.e("TAG", "Error Called AFR")
                 AffordabilityResponseModel(
                     "Error Occurred",
                     isError = true,

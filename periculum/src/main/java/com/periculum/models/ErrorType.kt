@@ -7,5 +7,6 @@ enum class ErrorType {
     LocationNotEnabledError,
     UnknownError,
     NetworkRequest,
+    InvalidVendorData,
     Null
 }

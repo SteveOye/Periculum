@@ -1,5 +1,8 @@
 package tech.smallwonder.smsextract
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -60,41 +63,6 @@ fun Greeting() {
        item {
            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                if (state.value) CircularProgressIndicator(modifier = Modifier.padding(20.dp))
-
-               val merchantIdText = rememberSaveable {
-                   mutableStateOf("")
-               }
-               OutlinedTextField(
-                   value = merchantIdText.value,
-                   onValueChange = {
-                       merchantIdText.value = it
-                   },
-                   placeholder = {
-                       Text(text = "Please enter merchantId")
-                   },
-                   label = {
-                       Text(text = "Merchant Id")
-                   },
-                   keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, capitalization = KeyboardCapitalization.Sentences),
-                   modifier = Modifier.padding(top = 20.dp)
-               )
-
-               val secretKeyText = rememberSaveable {
-                   mutableStateOf("")
-               }
-               OutlinedTextField(
-                   value = secretKeyText.value,
-                   onValueChange = {
-                       secretKeyText.value = it
-                   },
-                   placeholder = {
-                       Text(text = "Please enter secret key")
-                   },
-                   label = {
-                       Text(text = "Secret key")
-                   },
-                   keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, capitalization = KeyboardCapitalization.Sentences),
-               )
 
                val phoneNumberText = rememberSaveable {
                    mutableStateOf("")
@@ -176,23 +144,23 @@ fun Greeting() {
                Button(
                    onClick = {
                        try{
-                           if(merchantIdText.value.isEmpty() || secretKeyText.value.isEmpty() || phoneNumberText.value.isEmpty() || bvnText.value.isEmpty() || dtiText.value.isEmpty() || loanTenureText.value.isEmpty()) {
+                           if(phoneNumberText.value.isEmpty() || bvnText.value.isEmpty() || dtiText.value.isEmpty() || loanTenureText.value.isEmpty()) {
                                Toast.makeText(context, "Please input all the parameters", Toast.LENGTH_LONG).show()
                            }else {
                                errorState.value = ErrorType.Null
                                state.value = true
+                               text.value = ""
                                Periculum.start(
                                    VendorData(
-                                       merchantId = secretKeyText.value,
-                                       secretKey = secretKeyText.value,
                                        phoneNumber = phoneNumberText.value,
                                        bvn = bvnText.value,
                                        dti = dtiText.value.toDouble(),
-                                       loanTenure = loanTenureText.value.toInt()
+                                       loanTenure = loanTenureText.value.toInt(),
+                                       token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoibnVjbGV1c2lzIiwiaXNzIjoiaHR0cHM6Ly9wZXJpY3VsdW0tdGVjaG5vbG9naWVzLWluYy5hdXRoMC5jb20vIiwic3ViIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnJAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vYXBpLmluc2lnaHRzLXBlcmljdWx1bS5jb20iLCJpYXQiOjE2NDI2ODA4MjQsImV4cCI6MTY0MzI4NTYyNCwiYXpwIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnIiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.Ell030Eb9_DkDCj4JO-puMSSAtpIw5l2ACXSYoySysXgPEcyqTrgusikm7IA3yCWN1hsnAPwtZPX0ndE7Q98KzgnDOTVVtp83vGbL3Kt3PeGPruYCXdXehD7TuF0vjEGELnBz3gfUmx_aCYKD7B9MZjs-VPJXZgwVTMAkv8GDdOhw_xDrDJKB8PtReLzSwKPA81P3mQINo21Z4r40oFT-c8A-PVFNYks9E8atwSvgsuYtX-RSys4mARB_3djP0OotEFqIPoMibJj9Jv90b4Q5KmqooUozkFb0igB2QxNxOR9epMdCMUE32tUitrcBM2CuqU3xquJzRG9eOVrTbLnXA"
                                    ),
                                    object : PericulumCallback {
                                        override fun onSuccess(response: Response) {
-                                           text.value = response.message
+                                           text.value = response.responseBody!!
                                            state.value = false
                                            errorState.value = ErrorType.UnknownError
                                        }

@@ -67,15 +67,6 @@ internal class Utils {
         return LocationManagerCompat.isLocationEnabled(locationManager)
     }
 
-    internal fun getTokenFromCache(): String = PericulumDependency.getSharedPreferences().getString(tokenKey, "")!!
-
-    internal fun saveTokenToCache(token: String) {
-        with(PericulumDependency.getSharedPreferences().edit()) {
-            putString(tokenKey, token)
-            apply()
-        }
-    }
-
     /**
      * This method is used to get the connection of a device
      * @param context Application context
@@ -208,14 +199,12 @@ internal class Utils {
                 return buf.toString()
             }
         } catch (ignored: Exception) {
-        } // for now eat exceptions
+        }
         return "02:00:00:00:00:00"
     }
 
     companion object {
-        internal const val sharedPreferencesKey = "Periculum"
-        internal const val tokenKey = "Token"
-        internal const val baseUrl = "https://dev-statement-analytics-json-api.azurewebsites.net"
+        internal const val baseUrl = "https://api.insights-periculum.com"
     }
 }
 

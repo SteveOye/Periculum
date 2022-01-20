@@ -2,4 +2,4 @@ package com.periculum.internal.models
 
 import com.periculum.models.ErrorType
 
-data class AffordabilityResponseModel(val responseBody: String = "", val isError: Boolean, val errorType: ErrorType = ErrorType.Null)
+internal data class AffordabilityResponseModel(val responseBody: String = "", val isError: Boolean, val errorType: ErrorType = ErrorType.Null)

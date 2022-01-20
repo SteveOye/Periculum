@@ -1,5 +1,6 @@
 package com.periculum
 
+import android.util.Log
 import com.periculum.internal.PericulumManager
 import com.periculum.models.PericulumCallback
 import com.periculum.models.Response
@@ -17,7 +18,7 @@ object Periculum {
             if(response.isError) {
                 periculumCallback.onError(response.message, response.errorType)
             }else {
-                periculumCallback.onSuccess(Response(response.message, isError = false))
+                periculumCallback.onSuccess(response)
             }
         }
     }
