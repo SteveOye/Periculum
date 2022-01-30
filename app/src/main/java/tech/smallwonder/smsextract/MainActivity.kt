@@ -156,7 +156,7 @@ fun Greeting() {
                                        bvn = bvnText.value,
                                        dti = dtiText.value.toDouble(),
                                        loanTenure = loanTenureText.value.toInt(),
-                                       token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoibnVjbGV1c2lzIiwiaXNzIjoiaHR0cHM6Ly9wZXJpY3VsdW0tdGVjaG5vbG9naWVzLWluYy5hdXRoMC5jb20vIiwic3ViIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnJAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vYXBpLmluc2lnaHRzLXBlcmljdWx1bS5jb20iLCJpYXQiOjE2NDI2ODA4MjQsImV4cCI6MTY0MzI4NTYyNCwiYXpwIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnIiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.Ell030Eb9_DkDCj4JO-puMSSAtpIw5l2ACXSYoySysXgPEcyqTrgusikm7IA3yCWN1hsnAPwtZPX0ndE7Q98KzgnDOTVVtp83vGbL3Kt3PeGPruYCXdXehD7TuF0vjEGELnBz3gfUmx_aCYKD7B9MZjs-VPJXZgwVTMAkv8GDdOhw_xDrDJKB8PtReLzSwKPA81P3mQINo21Z4r40oFT-c8A-PVFNYks9E8atwSvgsuYtX-RSys4mARB_3djP0OotEFqIPoMibJj9Jv90b4Q5KmqooUozkFb0igB2QxNxOR9epMdCMUE32tUitrcBM2CuqU3xquJzRG9eOVrTbLnXA"
+                                       token = ""
                                    ),
                                    object : PericulumCallback {
                                        override fun onSuccess(response: Response) {
