@@ -31,21 +31,21 @@ To get a Periculum library into your build:
 
 Add it in your root build.gradle at the end of repositories
 
-```
+``` gradle
   allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
+      repositories {
+	...
+	maven { url 'https://jitpack.io' }
+      }
+  }
 ```
 
 **Step 2**. Add the dependency
 
-```
-dependencies {
-	        implementation 'com.github.AshaluwalaKazeem:Periculum:v1.0.1-beta'
-	}
+``` gradle
+    dependencies {
+        implementation 'com.github.AshaluwalaKazeem:Periculum:v1.0.1-beta'
+    }
 ```
 
 
@@ -62,7 +62,7 @@ dependencies {
 | `token` | `string` | **Required**. API access token generated from periculum api |
 
 
-```
+``` kotlin
 VendorData(
     phoneNumber = "+2348089182606", // customer phone number
     bvn = "0000000111", // customer bvn
@@ -81,7 +81,7 @@ VendorData(
 
 
 
-```
+``` kotlin
   Periculum.start(
     vendorData,
     object : PericulumCallback {
@@ -106,7 +106,7 @@ VendorData(
 
 Simple use cases will look something like this:
 
-```
+``` kotlin
 import com.periculum.Periculum
 import com.periculum.models.ErrorType
 import com.periculum.models.PericulumCallback
