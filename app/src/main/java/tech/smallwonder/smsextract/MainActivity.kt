@@ -118,16 +118,6 @@ fun Greeting() {
                val loanTenureText = rememberSaveable {
                    mutableStateOf("")
                }
-               val errorState = rememberSaveable {
-                   mutableStateOf(ErrorType.Null)
-               }
-               val color = if(errorState.value == ErrorType.NetworkRequest){
-                   Color.Red
-               }else if(errorState.value == ErrorType.UnknownError) {
-                   Color.Blue
-               }else {
-                   Color.Black
-               }
                OutlinedTextField(
                    value = loanTenureText.value,
                    onValueChange = {
@@ -147,29 +137,36 @@ fun Greeting() {
                            if(phoneNumberText.value.isEmpty() || bvnText.value.isEmpty() || dtiText.value.isEmpty() || loanTenureText.value.isEmpty()) {
                                Toast.makeText(context, "Please input all the parameters", Toast.LENGTH_LONG).show()
                            }else {
-                               errorState.value = ErrorType.Null
                                state.value = true
                                text.value = ""
+                               val vendorData = VendorData(
+                                   phoneNumber = "+2348089182606", // customer phone number
+                                   bvn = "0000000111", // customer bvn
+                                   dti = 0.2, // dti
+                                   loanTenure = 2, // loan tenure
+                                   token = "" // token generated from periculum api
+                               )
                                Periculum.start(
-                                   VendorData(
-                                       phoneNumber = phoneNumberText.value,
-                                       bvn = bvnText.value,
-                                       dti = dtiText.value.toDouble(),
-                                       loanTenure = loanTenureText.value.toInt(),
-                                       token = ""
-                                   ),
+                                   vendorData,
                                    object : PericulumCallback {
                                        override fun onSuccess(response: Response) {
-                                           text.value = response.responseBody!!
-                                           state.value = false
-                                           errorState.value = ErrorType.UnknownError
+                                           Log.i("TAG", response.responseBody!!)
                                        }
 
                                        override fun onError(message: String, errorType: ErrorType) {
-                                           text.value = message
+                                           text.value = message // Error message
                                            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
                                            state.value = false
-                                           errorState.value = ErrorType.NetworkRequest
+
+                                           when(errorType) { // handle response error
+                                               ErrorType.SmsPermissionError -> { }
+                                               ErrorType.LocationPermissionError -> { }
+                                               ErrorType.InternetConnectionError -> { }
+                                               ErrorType.LocationNotEnabledError -> { }
+                                               ErrorType.NetworkRequest -> { }
+                                               ErrorType.InvalidVendorData -> { }
+                                               ErrorType.UnknownError -> { }
+                                           }
                                        }
 
                                    }
@@ -184,7 +181,7 @@ fun Greeting() {
                ) {
                    Text(text = "start process")
                }
-               Text(text = text.value.replace("\\n", "\n"), color = color)
+               Text(text = text.value.replace("\\n", "\n"))
            }
        }
    }

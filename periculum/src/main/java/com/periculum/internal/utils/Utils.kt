@@ -188,11 +188,11 @@ internal class Utils {
         try {
             val interfaces: List<NetworkInterface> =
                 Collections.list(NetworkInterface.getNetworkInterfaces())
-            for (intf in interfaces) {
+            for (data in interfaces) {
                 if (interfaceName != null) {
-                    if (!intf.name.equals(interfaceName, ignoreCase = true)) continue
+                    if (!data.name.equals(interfaceName, ignoreCase = true)) continue
                 }
-                val mac = intf.hardwareAddress ?: return ""
+                val mac = data.hardwareAddress ?: return ""
                 val buf = StringBuilder()
                 for (aMac in mac) buf.append(String.format("%02X:", aMac))
                 if (buf.length > 0) buf.deleteCharAt(buf.length - 1)
