@@ -3,7 +3,6 @@ package com.periculum.internal.repository
 import android.content.Context
 import android.content.Context.BATTERY_SERVICE
 import android.content.pm.PackageManager
-import android.hardware.biometrics.BiometricPrompt
 import android.os.BatteryManager
 import android.os.Build
 import android.telephony.TelephonyManager
@@ -15,7 +14,6 @@ import com.periculum.internal.utils.PericulumDependency
 import com.periculum.internal.utils.Utils
 import com.periculum.internal.utils.getProjectName
 import com.periculum.models.ErrorType
-import com.periculum.models.Response
 import kotlin.random.Random
 
 
@@ -28,47 +26,63 @@ internal class AnalyticsRepository {
     ): AnalyticsResponseModel {
         val locationResult = LocationRepository().getUserLocationData()
         if (locationResult.errorType != ErrorType.Null) {
-            return AnalyticsResponseModel(locationResult.message, true, locationResult.errorType)
+            return AnalyticsResponseModel(message = locationResult.message, isError =  true, errorType = locationResult.errorType)
         }
         return try {
             val response = RetrofitInstance.api.postAnalytics(token = "Bearer $token", analyticsBody = getAnalyticsData(phoneNumber, bvn, locationModel = locationResult.locationModel!!))
             val data = response.execute()
             if(data.isSuccessful) {
-                if (data.body()!!.has("key")) {
-                    AnalyticsResponseModel(data.body()!!["key"].asString, isError = false)
-                } else {
-                    AnalyticsResponseModel(
-                        responseBody = "Error occurred while getting statement key.",
-                        true,
-                        errorType = ErrorType.NetworkRequest
-                    )
-                }
+                AnalyticsResponseModel(response = data.body()!!.toString(), isError = false)
             }else {
-                AnalyticsResponseModel(responseBody = data.message(), true, errorType = ErrorType.NetworkRequest)
+                if(data.code() == 401) {
+                    AnalyticsResponseModel(message = "Invalid Token. Unauthorized", isError = true, errorType = ErrorType.InvalidToken)
+                }else {
+                    AnalyticsResponseModel(message = data.message(), isError = true, errorType = ErrorType.NetworkRequest)
+                }
             }
         } catch (e: Exception) {
             if (!Utils().isInternetConnected()) {
-                AnalyticsResponseModel(responseBody = "Internet Connection Required", true, errorType = ErrorType.InternetConnectionError)
+                AnalyticsResponseModel(message = "Internet Connection Required", isError = true, errorType = ErrorType.InternetConnectionError)
             }else if (!Utils().isSmsPermissionGranted()) {
-                AnalyticsResponseModel(responseBody = "Sms Permission Required", true, errorType = ErrorType.SmsPermissionError)
-            }else if (!Utils().isLocationPermissionGranted()) {
-                AnalyticsResponseModel(responseBody = "Access Location Permission Required", true, errorType = ErrorType.LocationPermissionError)
-            }else if (!Utils().isLocationEnabled()) {
-                AnalyticsResponseModel(responseBody = "Location not enabled.", true, errorType = ErrorType.LocationNotEnabledError)
-            }else {
-                AnalyticsResponseModel(responseBody = "Error occurred.", true, errorType = ErrorType.NetworkRequest)
+                AnalyticsResponseModel(
+                    message = "Sms Permission Required",
+                    isError = true,
+                    errorType = ErrorType.SmsPermissionError
+                )
+            } else if (!Utils().isLocationPermissionGranted()) {
+                AnalyticsResponseModel(
+                    message = "Access Location Permission Required",
+                    isError = true,
+                    errorType = ErrorType.LocationPermissionError
+                )
+            } else if (!Utils().isLocationEnabled()) {
+                AnalyticsResponseModel(
+                    message = "Location not enabled.",
+                    isError = true,
+                    errorType = ErrorType.LocationNotEnabledError
+                )
+            } else {
+                AnalyticsResponseModel(
+                    message = "Error occurred.",
+                    isError = true,
+                    errorType = ErrorType.NetworkRequest
+                )
             }
         }
     }
 
-    private suspend fun getAnalyticsData(phoneNumber: String, bvn: String, locationModel: LocationModel): AnalyticsModel {
+    private suspend fun getAnalyticsData(
+        phoneNumber: String,
+        bvn: String,
+        locationModel: LocationModel
+    ): AnalyticsModel {
         val packageManager = PericulumDependency.getApplicationContext().packageManager
         val packageInfo = packageManager.getPackageInfo(
             PericulumDependency.getApplicationContext().packageName,
             PackageManager.GET_PERMISSIONS
         )
         return AnalyticsModel(
-            statementName = "Kazeem ${Random.nextFloat()}",
+            statementName = "$phoneNumber-${Random.nextFloat()}",
             appName = PericulumDependency.getApplicationContext().getProjectName(),
             bundleId = PericulumDependency.getApplicationContext().packageName,
             version = packageInfo.versionName,
@@ -83,6 +97,7 @@ internal class AnalyticsRepository {
             location = locationModel
         )
     }
+
 
     private suspend fun getSmsData(): SmsModel {
         val smslist = SmsRepository().getSmsDataFromDevice()

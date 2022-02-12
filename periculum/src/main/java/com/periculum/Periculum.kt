@@ -1,25 +1,54 @@
 package com.periculum
 
-import android.util.Log
 import com.periculum.internal.PericulumManager
 import com.periculum.models.PericulumCallback
-import com.periculum.models.Response
-import com.periculum.models.VendorData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 object Periculum {
 
-    fun start(vendorData: VendorData, periculumCallback: PericulumCallback) {
+    fun analytics(
+        phoneNumber: String,
+        bvn: String,
+        token: String,
+        periculumCallback: PericulumCallback
+    ) {
+        runBlocking {
+
+        }
         GlobalScope.launch(Dispatchers.Main) {
-            val response = PericulumManager().startProcess(vendorData)
-            if(response.isError) {
+            val response = PericulumManager().startAnalytics(
+                phoneNumber = phoneNumber,
+                bvn = bvn,
+                token = token
+            )
+            if (response.isError) {
                 periculumCallback.onError(response.message, response.errorType)
-            }else {
-                periculumCallback.onSuccess(response)
+                coroutineContext.cancel()
+            } else {
+                periculumCallback.onSuccess(response.responseBody!!)
+                coroutineContext.cancel()
             }
         }
     }
+
+    fun affordability(
+        dti: Double, loanTenure: Int, statementKey: Int,
+        token: String,
+        periculumCallback: PericulumCallback
+    ) {
+        runBlocking {
+
+        }
+        GlobalScope.launch(Dispatchers.Main) {
+            val response = PericulumManager().startAffordability(dti = dti, loanTenure = loanTenure, statementKey = statementKey, token = token)
+            if (response.isError) {
+                periculumCallback.onError(response.message, response.errorType)
+                coroutineContext.cancel()
+            } else {
+                periculumCallback.onSuccess(response.responseBody!!)
+                coroutineContext.cancel()
+            }
+        }
+    }
+
 }

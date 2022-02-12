@@ -1,8 +1,5 @@
 package tech.smallwonder.smsextract
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -20,20 +17,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.periculum.Periculum
 import com.periculum.models.ErrorType
 import com.periculum.models.PericulumCallback
-import com.periculum.models.Response
-import com.periculum.models.VendorData
 import tech.smallwonder.smsextract.ui.theme.SmsExtractTheme
-import java.lang.Exception
 
+const val TAG = "MainActivity"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,36 +132,54 @@ fun Greeting() {
                            }else {
                                state.value = true
                                text.value = ""
-                               val vendorData = VendorData(
-                                   phoneNumber = "+2348089182606", // customer phone number
-                                   bvn = "0000000111", // customer bvn
-                                   dti = 0.2, // dti
-                                   loanTenure = 2, // loan tenure
-                                   token = "" // token generated from periculum api
-                               )
-                               Periculum.start(
-                                   vendorData,
+                               Periculum.affordability(
+                                   dti = 0.1,
+                                   loanTenure = 32,
+                                   statementKey = 62,
+                                   token = "",
                                    object : PericulumCallback {
-                                       override fun onSuccess(response: Response) {
-                                           Log.i("TAG", response.responseBody!!)
+                                       override fun onSuccess(response: String) {
+                                           Log.i(TAG, response)
+                                           state.value = false
+                                           text.value = "Sucess --->\t\t $response"
                                        }
 
-                                       override fun onError(message: String, errorType: ErrorType) {
-                                           text.value = message // Error message
-                                           Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                                       override fun onError(
+                                           message: String,
+                                           errorType: ErrorType
+                                       ) {
+                                           text.value = "$errorType ---> $message" // Error message
+                                           Toast.makeText(context, message, Toast.LENGTH_LONG)
+                                               .show()
                                            state.value = false
 
-                                           when(errorType) { // handle response error
-                                               ErrorType.SmsPermissionError -> { }
-                                               ErrorType.LocationPermissionError -> { }
-                                               ErrorType.InternetConnectionError -> { }
-                                               ErrorType.LocationNotEnabledError -> { }
-                                               ErrorType.NetworkRequest -> { }
-                                               ErrorType.InvalidVendorData -> { }
-                                               ErrorType.UnknownError -> { }
+                                           when (errorType) { // handle response error
+                                               ErrorType.SmsPermissionError -> {
+                                                   Log.e(TAG, "SmsPermissionError")
+                                               }
+                                               ErrorType.LocationPermissionError -> {
+                                                   Log.e(TAG, "LocationPermissionError")
+                                               }
+                                               ErrorType.InternetConnectionError -> {
+                                                   Log.e(TAG, "InternetConnectionError")
+                                               }
+                                               ErrorType.LocationNotEnabledError -> {
+                                                   Log.e(TAG, "LocationNotEnabledError")
+                                               }
+                                               ErrorType.NetworkRequest -> {
+                                                   Log.e(TAG, "NetworkRequest")
+                                               }
+                                               ErrorType.InvalidToken -> {
+                                                   Log.e(TAG, "InvalidToken")
+                                               }
+                                               ErrorType.InvalidData -> {
+                                                   Log.e(TAG, "InvalidData")
+                                               }
+                                               ErrorType.UnknownError -> {
+                                                   Log.e(TAG, "UnknownError")
+                                               }
                                            }
                                        }
-
                                    }
                                )
                            }

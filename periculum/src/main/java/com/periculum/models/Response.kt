@@ -1,3 +1,5 @@
 package com.periculum.models
 
-data class Response (val message: String = "", val responseBody: String?, val isError: Boolean, val errorType: ErrorType = ErrorType.Null)
+import com.google.gson.JsonObject
+
+data class Response(val message: String = "", val responseBody: String? = null, val isError: Boolean, val errorType: ErrorType = ErrorType.Null)

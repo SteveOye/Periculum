@@ -1,13 +1,11 @@
 package com.periculum.internal.repository
 
-import android.util.Log
-import com.google.gson.Gson
 import com.periculum.internal.api.RetrofitInstance
 import com.periculum.internal.models.AffordabilityModel
 import com.periculum.internal.models.AffordabilityResponseModel
+import com.periculum.internal.models.AnalyticsResponseModel
 import com.periculum.internal.utils.Utils
 import com.periculum.models.ErrorType
-import com.periculum.models.Response
 
 internal class AffordabilityRepository {
 
@@ -28,11 +26,19 @@ internal class AffordabilityRepository {
                 if (data.isSuccessful) {
                     AffordabilityResponseModel(data.body()!!.toString(), isError = false)
                 } else {
-                    AffordabilityResponseModel(
-                        responseBody = data.message(),
-                        true,
-                        errorType = ErrorType.NetworkRequest
-                    )
+                    if(data.code() == 401) {
+                        AffordabilityResponseModel(
+                            responseBody = "Invalid Token. Unauthorized",
+                            true,
+                            errorType = ErrorType.InvalidToken
+                        )
+                    }else {
+                        AffordabilityResponseModel(
+                            responseBody = data.message(),
+                            true,
+                            errorType = ErrorType.NetworkRequest
+                        )
+                    }
                 }
             }
         } catch (e: Exception) {

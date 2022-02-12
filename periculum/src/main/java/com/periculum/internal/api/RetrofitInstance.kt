@@ -10,8 +10,8 @@ internal class RetrofitInstance {
     companion object {
         private val retrofit by lazy {
             val client = OkHttpClient.Builder()
-                .connectTimeout(100, TimeUnit.SECONDS)
-                .readTimeout(100, TimeUnit.SECONDS).build()
+                .connectTimeout(200, TimeUnit.SECONDS)
+                .readTimeout(200, TimeUnit.SECONDS).build()
             Retrofit.Builder()
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
