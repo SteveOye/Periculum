@@ -13,7 +13,7 @@ internal class AffordabilityRepository {
         return try {
             if (!Utils().isInternetConnected()) {
                 AffordabilityResponseModel(
-                    "There is no access to the internet.",
+                    "There is no access to the internet. ",
                     isError = true,
                     errorType = ErrorType.InternetConnectionError
                 )
