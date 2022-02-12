@@ -18,8 +18,8 @@ The library gives you credit score information for your customer. No stress :)
 - Compile Android SDK: Periculum requires you to compile against API 31 or later.
 ## Info
 
-For this plugin to work, you must have a Periculum account and you'll also 
-need to use your merchant Id and secret key to generate a token from the 
+For this plugin to work, you must have a Periculum account and you'll also
+need to use your merchant Id and secret key to generate a token from the
 Periculum API.
 
 
@@ -131,7 +131,7 @@ Periculum.affordability(
 
 #### Error Types
 
-These are the error types that can be used in the onError callback 
+These are the error types that can be used in the onError callback
 to handle error cases.
 
 | Parameter | Error Description                       |
