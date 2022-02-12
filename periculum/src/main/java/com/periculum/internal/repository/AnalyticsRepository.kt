@@ -42,16 +42,16 @@ internal class AnalyticsRepository {
             }
         } catch (e: Exception) {
             if (!Utils().isInternetConnected()) {
-                AnalyticsResponseModel(message = "Internet Connection Required", isError = true, errorType = ErrorType.InternetConnectionError)
+                AnalyticsResponseModel(message = "There is no access to the internet.", isError = true, errorType = ErrorType.InternetConnectionError)
             }else if (!Utils().isSmsPermissionGranted()) {
                 AnalyticsResponseModel(
-                    message = "Sms Permission Required",
+                    message = "Permission to read SMS messages from the device has been denied.",
                     isError = true,
                     errorType = ErrorType.SmsPermissionError
                 )
             } else if (!Utils().isLocationPermissionGranted()) {
                 AnalyticsResponseModel(
-                    message = "Access Location Permission Required",
+                    message = "Permission to read the location of the device has been denied.",
                     isError = true,
                     errorType = ErrorType.LocationPermissionError
                 )
@@ -63,7 +63,7 @@ internal class AnalyticsRepository {
                 )
             } else {
                 AnalyticsResponseModel(
-                    message = "Error occurred.",
+                    message = "An error occurred while submitting the request",
                     isError = true,
                     errorType = ErrorType.NetworkRequest
                 )

@@ -19,14 +19,14 @@ internal class PericulumManager {
             try {
                 if (bvn.length != 10 || !bvn.isDigitsOnly()) {
                     Response(
-                        message = "Invalid BVN Number",
+                        message = "An invalid parameter has been passed.",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InvalidData
                     )
                 } else if (token.isEmpty()) {
                     Response(
-                        message = "Invalid token",
+                        message = "Invalid access token",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InvalidToken
@@ -36,28 +36,28 @@ internal class PericulumManager {
                     )
                 ) {
                     Response(
-                        message = "Invalid Phone Number",
+                        message = "An invalid parameter has been passed.",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InvalidData
                     )
                 } else if (!Utils().isInternetConnected()) {
                     Response(
-                        message = "Internet Connection Required",
+                        message = "There is no access to the internet.",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InternetConnectionError
                     )
                 } else if (!Utils().isSmsPermissionGranted()) {
                     Response(
-                        message = "Sms Permission Required",
+                        message = "Permission to read SMS messages from the device has been denied.",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.SmsPermissionError
                     )
                 } else if (!Utils().isLocationPermissionGranted()) {
                     Response(
-                        message = "Access Location Permission Required",
+                        message = "Permission to read the location of the device has been denied.",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.LocationPermissionError
@@ -90,7 +90,7 @@ internal class PericulumManager {
             } catch (e: Exception) {
                 if (!Utils().isInternetConnected()) {
                     Response(
-                        message = "Internet Connection Required",
+                        message = "There is no access to the internet.",
                         isError = true,
                         errorType = ErrorType.InternetConnectionError,
                         responseBody = null
@@ -118,14 +118,14 @@ internal class PericulumManager {
             try {
                 if (token.isEmpty()) {
                     Response(
-                        message = "Invalid token",
+                        message = "Invalid access token",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InvalidToken
                     )
                 } else if (!Utils().isInternetConnected()) {
                     Response(
-                        message = "Internet Connection Required",
+                        message = "There is no access to the internet.",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InternetConnectionError
@@ -158,7 +158,7 @@ internal class PericulumManager {
             } catch (e: Exception) {
                 if (!Utils().isInternetConnected()) {
                     Response(
-                        message = "Internet Connection Required",
+                        message = "There is no access to the internet.",
                         isError = true,
                         errorType = ErrorType.InternetConnectionError,
                         responseBody = null

@@ -13,7 +13,7 @@ internal class AffordabilityRepository {
         return try {
             if (!Utils().isInternetConnected()) {
                 AffordabilityResponseModel(
-                    "Internet Connection Required",
+                    "There is no access to the internet.",
                     isError = true,
                     errorType = ErrorType.InternetConnectionError
                 )
@@ -44,19 +44,19 @@ internal class AffordabilityRepository {
         } catch (e: Exception) {
             if (!Utils().isInternetConnected()) {
                 AffordabilityResponseModel(
-                    "Internet Connection Required",
+                    "There is no access to the internet.",
                     isError = true,
                     errorType = ErrorType.InternetConnectionError
                 )
             }else if (!Utils().isSmsPermissionGranted()) {
                 AffordabilityResponseModel(
-                    "Sms Permission Required",
+                    "Permission to read SMS messages from the device has been denied.",
                     isError = true,
                     errorType = ErrorType.SmsPermissionError
                 )
             }else if (!Utils().isLocationPermissionGranted()) {
                 AffordabilityResponseModel(
-                    "Access Location Permission Required",
+                    "Permission to read the location of the device has been denied.",
                     isError = true,
                     errorType = ErrorType.LocationPermissionError
                 )
@@ -68,7 +68,7 @@ internal class AffordabilityRepository {
                 )
             }else {
                 AffordabilityResponseModel(
-                    "Error Occurred",
+                    "An error occurred while submitting the request",
                     isError = true,
                     errorType = ErrorType.NetworkRequest
                 )

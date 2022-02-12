@@ -31,7 +31,7 @@ To get a Periculum library into your build:
 
 Add it in your root build.gradle at the end of repositories
 
-```
+``` gradle
   allprojects {
 		repositories {
 			...
@@ -42,7 +42,7 @@ Add it in your root build.gradle at the end of repositories
 
 **Step 2**. Add the dependency
 
-```
+``` gradle
 dependencies {
 	        implementation 'com.github.AshaluwalaKazeem:Periculum:v1.0.1-beta'
 	}
@@ -51,54 +51,113 @@ dependencies {
 
 ## API Reference
 
-#### Customer's Data (VendorData Object)
+#### Anaalytics Parameters
+
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `phoneNumber` | `string` | **Required**. customer phone number |
-| `bvn` | `string` | **Required**. customer bvn |
-| `dti` | `Double` | **Required**. DTI |
-| `loanTenure` | `Int` | **Required**. customer phone number |
-| `token` | `string` | **Required**. API access token generated from periculum api |
+| `phoneNumber` | `String` | **Required**. customer phone number |
+| `bvn` | `String` | **Required**. customer bvn |
+| `token` | `String` | **Required**. API access token generated from periculum api |
+| `periculumCallback`      | `Interface` | **Required**. Callback function to get request status |
 
 
-```
-VendorData(
+``` kotlin
+Periculum.analytics(
     phoneNumber = "+2348089182606", // customer phone number
     bvn = "0000000111", // customer bvn
-    dti = 0.2, // dti
-    loanTenure = 2, // loan tenure
     token = "" // token generated from periculum api
+    object : PericulumCallback {
+        override fun onSuccess(response: String) {
+            Log.i("TAG", response)
+        }
+
+        override fun onError(
+            message: String,
+            errorType: ErrorType
+        ) {
+            Log.e("TAG", "Error message ---> $message")
+            when (errorType) { // handle response error
+                ErrorType.SmsPermissionError -> {
+                    Log.e("TAG", "SmsPermissionError")
+                }
+                ...
+            }
+        }
+    }
 )
 ```
 
-#### Periculum Parameters
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `vendorData`      | `VendorData Object` | **Required**. |
+#### Affordability Parameters
+
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `dti` | `Double` | **Required**. DTI |
+| `loanTenure` | `Int` | **Required**. Loan Tenure |
+| `statementKey` | `Int` | **Required**. Statement Key |
+| `token` | `String` | **Required**. API access token generated from periculum api |
 | `periculumCallback`      | `interface` | **Required**. Callback function to get request status |
 
 
 
-```
-  Periculum.start(
-    vendorData,
+``` kotlin
+Periculum.affordability(
+    dti = 0.1, // DTI
+    loanTenure = 32, // Loan Tenure
+    statementKey = 932, // Pass a valid statement key
+    token = "", // token generated from periculum api
     object : PericulumCallback {
-        override fun onSuccess(response: Response) {
-            Log.i("TAG", response.responseBody!!)
+        override fun onSuccess(response: String) {
+            Log.i("TAG", response)
         }
 
-        override fun onError(message: String, errorType: ErrorType) {
-            val errorMessage = message // Error message
-            when(errorType) { // handle response error
-                ErrorType.SmsPermissionError -> { }
+        override fun onError(
+            message: String,
+            errorType: ErrorType
+        ) {
+            Log.e("TAG", "Error message ---> $message")
+            when (errorType) { // handle response error
+                ErrorType.InternetConnectionError -> {
+                    Log.e("TAG", "InternetConnectionError")
+                }
                 ...
             }
         }
-
     }
 )
+```
+
+#### Error Types
+
+These are the error types that can be used in the onError callback 
+to handle error cases.
+
+| Parameter | Error Description                       |
+| :-------- | :-------------------------------- |
+| `InternetConnectionError`      | There is no access to the internet.  |
+| `SmsPermissionError`      | Permission to read SMS messages from the device has been denied. |
+| `LocationPermissionError`      | Permission to read the location of the device has been denied. |
+| `LocationNotEnabledError`      | Location not enabled. |
+| `UnknownError`      | Error Occurred. |
+| `NetworkRequest`      | While submitting the request, a network error occurred. |
+| `InvalidToken`      | Invalid access token |
+| `InvalidData`      | An invalid parameter has been passed. |
+
+
+
+``` kotlin
+enum class ErrorType {
+    InternetConnectionError,
+    SmsPermissionError,
+    LocationPermissionError,
+    LocationNotEnabledError,
+    UnknownError,
+    NetworkRequest,
+    InvalidToken,
+    InvalidData
+}
 ```
 
 
@@ -106,12 +165,12 @@ VendorData(
 
 Simple use cases will look something like this:
 
-```
+**For Analytics:**
+
+``` kotlin
 import com.periculum.Periculum
 import com.periculum.models.ErrorType
 import com.periculum.models.PericulumCallback
-import com.periculum.models.Response
-import com.periculum.models.VendorData
 ...
 
 
@@ -125,38 +184,54 @@ class MainActivity : ComponentActivity() {
 
                     Button(
                         onClick = {
-                            val vendorData = VendorData(
+                            Periculum.analytics(
                                 phoneNumber = "+2348089182606", // customer phone number
                                 bvn = "0000000111", // customer bvn
-                                dti = 0.2, // dti
-                                loanTenure = 2, // loan tenure
-                                token = "" // token generated from periculum api
-                            )
-                            Periculum.start(
-                                vendorData,
+                                token = "", // token generated from periculum api
                                 object : PericulumCallback {
-                                    override fun onSuccess(response: Response) {
-                                        Log.i("TAG", response.responseBody!!)
+                                    override fun onSuccess(response: String) {
+                                        Log.i(TAG, response)
                                     }
 
-                                    override fun onError(message: String, errorType: ErrorType) {
-                                        val errorMessage = message // Error message
-                                        when(errorType) { // handle response error
-                                            ErrorType.SmsPermissionError -> { }
-                                            ErrorType.LocationPermissionError -> { }
-                                            ErrorType.InternetConnectionError -> { }
-                                            ErrorType.LocationNotEnabledError -> { }
-                                            ErrorType.NetworkRequest -> { }
-                                            ErrorType.InvalidVendorData -> { }
-                                            ErrorType.UnknownError -> { }
+                                    override fun onError(
+                                        message: String,
+                                        errorType: ErrorType
+                                    ) {
+                                        Log.i(TAG, "Error type ---> $errorType") // Error Type
+                                        Log.i(TAG, "Error message ---> $message") // Error message
+
+                                        when (errorType) { // handle response error
+                                            ErrorType.SmsPermissionError -> {
+                                                Log.e(TAG, "SmsPermissionError")
+                                            }
+                                            ErrorType.LocationPermissionError -> {
+                                                Log.e(TAG, "LocationPermissionError")
+                                            }
+                                            ErrorType.InternetConnectionError -> {
+                                                Log.e(TAG, "InternetConnectionError")
+                                            }
+                                            ErrorType.LocationNotEnabledError -> {
+                                                Log.e(TAG, "LocationNotEnabledError")
+                                            }
+                                            ErrorType.NetworkRequest -> {
+                                                Log.e(TAG, "NetworkRequest")
+                                            }
+                                            ErrorType.InvalidToken -> {
+                                                Log.e(TAG, "InvalidToken")
+                                            }
+                                            ErrorType.InvalidData -> {
+                                                Log.e(TAG, "InvalidData")
+                                            }
+                                            ErrorType.UnknownError -> {
+                                                Log.e(TAG, "UnknownError")
+                                            }
                                         }
                                     }
-
                                 }
                             )
                         },
                     ) {
-                        Text(text = "Get Credit Score")
+                        Text(text = "Get Analytics)
                     }
 
 
@@ -164,12 +239,83 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+```
 
+
+
+**For Affordability:**
+
+``` kotlin
+import com.periculum.Periculum
+import com.periculum.models.ErrorType
+import com.periculum.models.PericulumCallback
+...
+
+
+class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            SmsExtractTheme {
+                Surface(color = MaterialTheme.colors.background) {
+
+                    Button(
+                        onClick = {
+                            Periculum.affordability(
+                                dti = 0.1, // DTI
+                                loanTenure = 32, // Loan Tenure
+                                statementKey = 932, // Pass a valid statement key
+                                token = "", // token generated from periculum api
+                                object : PericulumCallback {
+                                    override fun onSuccess(response: String) {
+                                        Log.i(TAG, response)
+                                    }
+
+                                    override fun onError(
+                                        message: String,
+                                        errorType: ErrorType
+                                    ) {
+                                        Log.i(TAG, "Error type ---> $errorType") // Error Type
+                                        Log.i(TAG, "Error message ---> $message") // Error message
+
+                                        when (errorType) { // handle response error
+                                            ErrorType.InternetConnectionError -> {
+                                                Log.e(TAG, "InternetConnectionError")
+                                            }
+                                            ErrorType.NetworkRequest -> {
+                                                Log.e(TAG, "NetworkRequest")
+                                            }
+                                            ErrorType.InvalidToken -> {
+                                                Log.e(TAG, "InvalidToken")
+                                            }
+                                            ErrorType.InvalidData -> {
+                                                Log.e(TAG, "InvalidData")
+                                            }
+                                            ErrorType.UnknownError -> {
+                                                Log.e(TAG, "UnknownError")
+                                            }
+                                        }
+                                    }
+                                }
+                            )
+                        },
+                    ) {
+                        Text(text = "Get Affordability)
+                    }
+
+
+                }
+            }
+        }
+    }
 }
 ```
 ## Required Permission
 
-```
+The permissions that must be granted in order for this library to function are listed below.
+``` xml
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.READ_SMS"/>
 <uses-permission android:name="android.permission.INTERNET"/>
