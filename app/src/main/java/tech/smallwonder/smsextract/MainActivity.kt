@@ -291,17 +291,8 @@ fun MainView() {
                                                 state.value = false
 
                                                 when (errorType) { // handle response error
-                                                    ErrorType.SmsPermissionError -> {
-                                                        Log.e(TAG, "SmsPermissionError")
-                                                    }
-                                                    ErrorType.LocationPermissionError -> {
-                                                        Log.e(TAG, "LocationPermissionError")
-                                                    }
                                                     ErrorType.InternetConnectionError -> {
                                                         Log.e(TAG, "InternetConnectionError")
-                                                    }
-                                                    ErrorType.LocationNotEnabledError -> {
-                                                        Log.e(TAG, "LocationNotEnabledError")
                                                     }
                                                     ErrorType.NetworkRequest -> {
                                                         Log.e(TAG, "NetworkRequest")
