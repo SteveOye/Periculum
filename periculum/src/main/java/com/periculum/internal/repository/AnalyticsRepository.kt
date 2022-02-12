@@ -19,6 +19,7 @@ import kotlin.random.Random
 
 internal class AnalyticsRepository {
 
+
     internal suspend fun postAnalyticsDataToServer(
         phoneNumber: String,
         bvn: String,
