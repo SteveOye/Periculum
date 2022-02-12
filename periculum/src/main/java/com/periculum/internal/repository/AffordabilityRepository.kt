@@ -28,7 +28,7 @@ internal class AffordabilityRepository {
                 } else {
                     if(data.code() == 401) {
                         AffordabilityResponseModel(
-                            responseBody = "Invalid Token. Unauthorized",
+                            responseBody = "Invalid Token. Unauthorized.",
                             true,
                             errorType = ErrorType.InvalidToken
                         )
