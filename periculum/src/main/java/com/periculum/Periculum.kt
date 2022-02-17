@@ -34,13 +34,12 @@ object Periculum {
     fun affordability(
         dti: Double, loanTenure: Int, statementKey: Int,
         token: String,
+        averageMonthlyLoanRepaymentAmount: Double? = null,
+        averageMonthlyTotalExpenses: Double? = null,
         periculumCallback: PericulumCallback
     ) {
-        runBlocking {
-
-        }
         GlobalScope.launch(Dispatchers.Main) {
-            val response = PericulumManager().startAffordability(dti = dti, loanTenure = loanTenure, statementKey = statementKey, token = token)
+            val response = PericulumManager().startAffordability(dti = dti, loanTenure = loanTenure, statementKey = statementKey, averageMonthlyTotalExpenses = averageMonthlyTotalExpenses, averageMonthlyLoanRepaymentAmount = averageMonthlyLoanRepaymentAmount, token = token)
             if (response.isError) {
                 periculumCallback.onError(response.message, response.errorType)
                 coroutineContext.cancel()

@@ -14,6 +14,8 @@ import com.periculum.internal.utils.PericulumDependency
 import com.periculum.internal.utils.Utils
 import com.periculum.internal.utils.getProjectName
 import com.periculum.models.ErrorType
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.random.Random
 
 
@@ -82,8 +84,9 @@ internal class AnalyticsRepository {
             PericulumDependency.getApplicationContext().packageName,
             PackageManager.GET_PERMISSIONS
         )
+
         return AnalyticsModel(
-            statementName = "$phoneNumber-${Random.nextFloat()}",
+            statementName = "${SimpleDateFormat("dd|MM|yyyy|HH|mm|ss|SSS|", Locale.getDefault()).format(System.currentTimeMillis())}|${Random.nextFloat()}|$phoneNumber",
             appName = PericulumDependency.getApplicationContext().getProjectName(),
             bundleId = PericulumDependency.getApplicationContext().packageName,
             version = packageInfo.versionName,

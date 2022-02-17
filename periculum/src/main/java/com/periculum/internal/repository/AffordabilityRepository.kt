@@ -1,5 +1,6 @@
 package com.periculum.internal.repository
 
+import android.util.Log
 import com.periculum.internal.api.RetrofitInstance
 import com.periculum.internal.models.AffordabilityModel
 import com.periculum.internal.models.AffordabilityResponseModel

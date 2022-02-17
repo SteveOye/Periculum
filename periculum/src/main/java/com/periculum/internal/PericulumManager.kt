@@ -17,29 +17,12 @@ internal class PericulumManager {
     suspend fun startAnalytics(phoneNumber: String, bvn: String, token: String): Response =
         withContext(Dispatchers.IO) {
             try {
-                if (bvn.length != 10 || !bvn.isDigitsOnly()) {
-                    Response(
-                        message = "An invalid parameter has been passed.",
-                        responseBody = null,
-                        isError = true,
-                        errorType = ErrorType.InvalidData
-                    )
-                } else if (token.isEmpty()) {
+                if (token.isEmpty()) {
                     Response(
                         message = "Invalid access token",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InvalidToken
-                    )
-                } else if (phoneNumber.isEmpty() || !PhoneNumberUtils.isGlobalPhoneNumber(
-                        phoneNumber
-                    )
-                ) {
-                    Response(
-                        message = "An invalid parameter has been passed.",
-                        responseBody = null,
-                        isError = true,
-                        errorType = ErrorType.InvalidData
                     )
                 } else if (!Utils().isInternetConnected()) {
                     Response(
@@ -113,10 +96,17 @@ internal class PericulumManager {
             }
         }
 
-    suspend fun startAffordability(dti: Double, loanTenure: Int, statementKey: Int, token: String): Response =
+    suspend fun startAffordability(dti: Double, loanTenure: Int, statementKey: Int, averageMonthlyTotalExpenses: Double?, averageMonthlyLoanRepaymentAmount: Double?, token: String): Response =
         withContext(Dispatchers.IO) {
             try {
-                if (token.isEmpty()) {
+                if(dti < 0.0 || dti > 1) {
+                    Response(
+                        message = "Invalid DTI. DTI value must be between 0 - 1",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InvalidData
+                    )
+                }else if (token.isEmpty()) {
                     Response(
                         message = "Invalid access token",
                         responseBody = null,
@@ -136,7 +126,9 @@ internal class PericulumManager {
                             AffordabilityModel(
                                 dti = dti,
                                 loanTenure = loanTenure,
-                                statementKey = statementKey
+                                statementKey = statementKey,
+                                averageMonthlyLoanRepaymentAmount = averageMonthlyLoanRepaymentAmount,
+                                averageMonthlyTotalExpenses = averageMonthlyTotalExpenses
                             ),
                             token = token
                         )
