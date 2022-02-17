@@ -44,7 +44,7 @@ allprojects {
 
 ``` gradle
 dependencies {
-    implementation 'com.github.AshaluwalaKazeem:Periculum:v1.0.1-beta'
+    implementation 'com.github.AshaluwalaKazeem:Periculum:TAG'
 }
 ```
 
