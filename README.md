@@ -18,8 +18,8 @@ The library gives you credit score information for your customer. No stress :)
 - Compile Android SDK: Periculum requires you to compile against API 31 or later.
 ## Info
 
-For this plugin to work, you must have a Periculum account and you'll also 
-need to use your merchant Id and secret key to generate a token from the 
+For this plugin to work, you must have a Periculum account and you'll also
+need to use your merchant Id and secret key to generate a token from the
 Periculum API.
 
 
@@ -32,20 +32,20 @@ To get a Periculum library into your build:
 Add it in your root build.gradle at the end of repositories
 
 ``` gradle
-  allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
+allprojects {
+    repositories {
+        ...
+	maven { url 'https://jitpack.io' }
+    }
+}
 ```
 
 **Step 2**. Add the dependency
 
 ``` gradle
 dependencies {
-	        implementation 'com.github.AshaluwalaKazeem:Periculum:v1.0.1-beta'
-	}
+    implementation 'com.github.AshaluwalaKazeem:Periculum:1.0.4-beta
+}
 ```
 
 
@@ -56,16 +56,16 @@ dependencies {
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `phoneNumber` | `String` | **Optional**. customer phone number |
-| `bvn` | `String` | **Optional**. customer bvn |
+| `phoneNumber` | `String` | **Required**. customer phone number |
+| `bvn` | `String` | **Required**. customer bvn |
 | `token` | `String` | **Required**. API access token generated from periculum api |
 | `periculumCallback`      | `Interface` | **Required**. Callback function to get request status |
 
 
 ``` kotlin
 Periculum.analytics(
-    phoneNumber = "+2348089182606", // customer phone number (Optional)
-    bvn = "0000000111", // customer bvn (Optional)
+    phoneNumber = "+2348089182606", // customer phone number
+    bvn = "0000000111", // customer bvn
     token = "" // token generated from periculum api
     object : PericulumCallback {
         override fun onSuccess(response: String) {
@@ -94,11 +94,9 @@ Periculum.analytics(
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `dti` | `Double` | **Required**. Debt to income ratio for the affordability analysis. |
-| `loanTenure` | `Int` | **Required**. The period of the loan in months. |
-| `statementKey` | `Int` | **Required**. The key of the statement to generate the affordability analysis for |
-| `averageMonthlyTotalExpenses` | `Double` | **Optional**. Average Monthly Total Expenses |
-| `averageMonthlyLoanRepaymentAmount` | `Double` | **Optional**. Average Monthly Loan Repayment Amount	 |
+| `dti` | `Double` | **Required**. DTI |
+| `loanTenure` | `Int` | **Required**. Loan Tenure |
+| `statementKey` | `Int` | **Required**. Statement Key |
 | `token` | `String` | **Required**. API access token generated from periculum api |
 | `periculumCallback`      | `interface` | **Required**. Callback function to get request status |
 
@@ -109,8 +107,6 @@ Periculum.affordability(
     dti = 0.1, // DTI
     loanTenure = 32, // Loan Tenure
     statementKey = 932, // Pass a valid statement key
-    averageMonthlyTotalExpenses = 0.0, // Average Monthly Total Expenses (Optional)
-    averageMonthlyLoanRepaymentAmount = 0.0, // Average Monthly Loan Repayment Amount (Optional)
     token = "", // token generated from periculum api
     object : PericulumCallback {
         override fun onSuccess(response: String) {
@@ -135,7 +131,7 @@ Periculum.affordability(
 
 #### Error Types
 
-These are the error types that can be used in the onError callback 
+These are the error types that can be used in the onError callback
 to handle error cases.
 
 | Parameter | Error Description                       |
@@ -167,9 +163,6 @@ enum class ErrorType {
 
 ## How do I use Periculum?
 
-See 
-[source code](https://github.com/AshaluwalaKazeem/Periculum/blob/master/app/src/main/java/tech/smallwonder/smsextract/MainActivity.kt) for full implementation.
-
 Simple use cases will look something like this:
 
 **For Analytics:**
@@ -192,8 +185,8 @@ class MainActivity : ComponentActivity() {
                     Button(
                         onClick = {
                             Periculum.analytics(
-                                phoneNumber = "+2348089182606", // customer phone number (Optional)
-                                bvn = "0000000111", // customer bvn (Optional)
+                                phoneNumber = "+2348089182606", // customer phone number
+                                bvn = "0000000111", // customer bvn
                                 token = "", // token generated from periculum api
                                 object : PericulumCallback {
                                     override fun onSuccess(response: String) {
@@ -274,8 +267,6 @@ class MainActivity : ComponentActivity() {
                                 dti = 0.1, // DTI
                                 loanTenure = 32, // Loan Tenure
                                 statementKey = 932, // Pass a valid statement key
-                                averageMonthlyTotalExpenses = 0.0, // Average Monthly Total Expenses (Optional)
-                                averageMonthlyLoanRepaymentAmount = 0.0, // Average Monthly Loan Repayment Amount (Optional)
                                 token = "", // token generated from periculum api
                                 object : PericulumCallback {
                                     override fun onSuccess(response: String) {
@@ -338,3 +329,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 Please make sure to update tests as appropriate.
 
+ 
