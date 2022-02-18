@@ -55,7 +55,7 @@ Your app must first identify and authorize itself against an authorization serve
 
 To authenticate against the authorization server, make sure you have Periculum's client id and client secret. Your app will not be able to receive an access token and call endpoints on the Insights API without these. If you have not received your client id or client secret, please contact Periculum's usual support channel (email support@periculum.io).
 
-Visit https://www.periculum.io/documentation/insights/#authenticationrequest for further information.
+Visit https://www.periculum.io/documentation/insights/#authenticationrequest for further information. 
 
 ![Authorization process](https://github.com/AshaluwalaKazeem/Periculum/blob/master/auth.png)
 
