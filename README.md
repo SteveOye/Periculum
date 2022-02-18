@@ -32,11 +32,11 @@ To get a Periculum library into your build:
 Add it in your root build.gradle at the end of repositories
 
 ``` gradle
-allprojects {
-    repositories {
-        ...
-        maven { url 'https://jitpack.io' }
-    }
+ allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
 }
 ```
 
@@ -44,10 +44,20 @@ allprojects {
 
 ``` gradle
 dependencies {
-    implementation 'com.github.AshaluwalaKazeem:Periculum:TAG'
+    implementation 'com.github.AshaluwalaKazeem:Periculum:v1.0.1-beta'
 }
 ```
 
+
+## Authentication
+
+Your app must first identify and authorize itself against an authorization server by getting an access token before using any of Insights endpoints. For security concerns, make sure that the entire process of obtaining a token takes place on a remote server. So, once you've gotten the token from your server, you can utilize it to get analytics or affordability information by giving it into the token parameter.
+
+To authenticate against the authorization server, make sure you have Periculum's client id and client secret. Your app will not be able to receive an access token and call endpoints on the Insights API without these. If you have not received your client id or client secret, please contact Periculum's usual support channel (email support@periculum.io).
+
+Visit https://www.periculum.io/documentation/insights/#authenticationrequest for further information. 
+
+![Authorization process](https://github.com/AshaluwalaKazeem/Periculum/blob/master/auth.png)
 
 ## API Reference
 
@@ -167,8 +177,8 @@ enum class ErrorType {
 
 ## How do I use Periculum?
 
-check 
-[here](https://github.com/AshaluwalaKazeem/Periculum/blob/master/app/src/main/java/tech/smallwonder/smsextract/MainActivity.kt) for full implementation.
+See 
+[source code](https://github.com/AshaluwalaKazeem/Periculum/blob/master/app/src/main/java/tech/smallwonder/smsextract/MainActivity.kt) for full implementation.
 
 Simple use cases will look something like this:
 
