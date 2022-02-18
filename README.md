@@ -167,8 +167,8 @@ enum class ErrorType {
 
 ## How do I use Periculum?
 
-See 
-[source code](https://github.com/AshaluwalaKazeem/Periculum/blob/master/app/src/main/java/tech/smallwonder/smsextract/MainActivity.kt) for full implementation.
+check 
+[here](https://github.com/AshaluwalaKazeem/Periculum/blob/master/app/src/main/java/tech/smallwonder/smsextract/MainActivity.kt) for full implementation.
 
 Simple use cases will look something like this:
 
