@@ -32,11 +32,11 @@ To get a Periculum library into your build:
 Add it in your root build.gradle at the end of repositories
 
 ``` gradle
- allprojects {
-	repositories {
-		...
-		maven { url 'https://jitpack.io' }
-	}
+allprojects {
+    repositories {
+        ...
+	maven { url 'https://jitpack.io' }
+    }
 }
 ```
 
@@ -44,7 +44,7 @@ Add it in your root build.gradle at the end of repositories
 
 ``` gradle
 dependencies {
-    implementation 'com.github.zabeehpericulum:Periculum:1.0.6-beta'
+    implementation 'com.github.Periculum-io:Periculum:1.0.6-beta'
 }
 ```
 
