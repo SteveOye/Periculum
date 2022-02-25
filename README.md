@@ -44,7 +44,7 @@ Add it in your root build.gradle at the end of repositories
 
 ``` gradle
 dependencies {
-    implementation 'com.github.AshaluwalaKazeem:Periculum:v1.0.1-beta'
+    implementation 'com.github.zabeehpericulum:Periculum:1.0.6-beta'
 }
 ```
 
