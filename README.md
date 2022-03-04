@@ -248,7 +248,7 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                     ) {
-                        Text(text = "Get Analytics)
+                        Text(text = "Get Analytics")
                     }
 
 
@@ -321,7 +321,7 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                     ) {
-                        Text(text = "Get Affordability)
+                        Text(text = "Get Affordability")
                     }
 
 
