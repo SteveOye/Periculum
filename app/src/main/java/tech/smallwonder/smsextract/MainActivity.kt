@@ -367,6 +367,55 @@ fun MainView() {
                         ) {
                             Text(text = "start process")
                         }
+                        Button(
+                            onClick = {
+                                var key: String = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoibnVjbGV1c2lzIiwiaXNzIjoiaHR0cHM6Ly9wZXJpY3VsdW0tdGVjaG5vbG9naWVzLWluYy5hdXRoMC5jb20vIiwic3ViIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnJAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vYXBpLmluc2lnaHRzLXBlcmljdWx1bS5jb20iLCJpYXQiOjE2NTA5MTQ2NzksImV4cCI6MTY1MTUxOTQ3OSwiYXpwIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnIiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.X6i4rNvo21ycR4l8Vbdovkyhc7lBYEdQ3zOzexOLO00XfcTO08wihZXuCHESCuYWxej39FLgNvoYINIqenRTEJkkyWR08KC_ONDUXpYvmJivFfmMzaBcDv4J9UvPxb0den-LMT-dfbAiwqQGXL1DadAo3nMHuzUFVpeLcJZ4lqQplulLPKuq9Mbsjfe4XC3Y6pm0sBd-0KI_MMYEBKHIw9U_arR_wf7GmcD3R_DZ-kzOwvmknu4VkmhGlAgzrZqq2uHUXzHBUOY99i_P2PktB5Ty7d9yKksSi5fJgQn6yTbRKghu5keZQ5lwaTfuq5PGovSIF-jDwiFHhf0qT3URsw";
+
+                                Periculum.generateCreditScore(
+                                    statementKey = "125",
+                                    token = key ,
+                                    periculumCallback = object : PericulumCallback {
+                                        override fun onSuccess(response: String) {
+                                            Log.i(TAG, response)
+                                            state.value = false
+                                            text.value = "Success --->\t\t $response"
+                                        }
+
+                                        override fun onError(
+                                            message: String,
+                                            errorType: ErrorType
+                                        ) {
+                                            text.value = "Error type ---> $errorType" // Error Type
+                                            text.value = "Error message ---> $message" // Error message
+                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
+                                                .show()
+                                            state.value = false
+
+                                            when (errorType) { // handle response error
+                                                ErrorType.InternetConnectionError -> {
+                                                    Log.e(TAG, "InternetConnectionError")
+                                                }
+                                                ErrorType.NetworkRequest -> {
+                                                    Log.e(TAG, "NetworkRequest")
+                                                }
+                                                ErrorType.InvalidToken -> {
+                                                    Log.e(TAG, "InvalidToken")
+                                                }
+                                                ErrorType.InvalidData -> {
+                                                    Log.e(TAG, "InvalidData")
+                                                }
+                                                ErrorType.UnknownError -> {
+                                                    Log.e(TAG, "UnknownError")
+                                                }
+                                            }
+                                        }
+                                    }
+                                )
+                            },
+                            modifier = Modifier.padding(20.dp)
+                        ) {
+                            Text(text = "start score")
+                        }
                         Text(text = text.value.replace("\\n", "\n"))
                     }
                 }

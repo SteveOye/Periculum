@@ -50,4 +50,22 @@ object Periculum {
         }
     }
 
+
+    fun generateCreditScore(statementKey: String,
+        token: String,
+        periculumCallback: PericulumCallback
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val response = PericulumManager().startGenerateCreditScore(statementKey = statementKey,  token = token,)
+            if (response.isError) {
+                periculumCallback.onError(response.message, response.errorType)
+                coroutineContext.cancel()
+            } else {
+                periculumCallback.onSuccess(response.responseBody!!)
+                coroutineContext.cancel()
+            }
+        }
+    }
+
+
 }

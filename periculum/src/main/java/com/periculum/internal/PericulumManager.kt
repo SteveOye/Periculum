@@ -1,10 +1,9 @@
 package com.periculum.internal
 
-import android.telephony.PhoneNumberUtils
-import androidx.core.text.isDigitsOnly
 import com.periculum.internal.models.AffordabilityModel
 import com.periculum.internal.repository.AffordabilityRepository
 import com.periculum.internal.repository.AnalyticsRepository
+import com.periculum.internal.repository.CreditScoreRespository
 import com.periculum.internal.utils.Utils
 import com.periculum.models.Response
 import com.periculum.models.ErrorType
@@ -160,6 +159,70 @@ internal class PericulumManager {
                         message = "Location not enabled.",
                         isError = true,
                         errorType = ErrorType.LocationNotEnabledError,
+                        responseBody = null
+                    )
+                } else {
+                    Response(
+                        message = "Error Occurred",
+                        isError = true,
+                        errorType = ErrorType.UnknownError,
+                        responseBody = null
+                    )
+                }
+            }
+        }
+
+    suspend fun startGenerateCreditScore(statementKey: String, token: String): Response =
+        withContext(Dispatchers.IO) {
+            try {
+                 if (token.isEmpty()) {
+                    Response(
+                        message = "Invalid access token",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InvalidToken
+                    )
+                } else if (statementKey.isEmpty()) {
+                     Response(
+                         message = "Invalid Statement key",
+                         responseBody = null,
+                         isError = true,
+                         errorType = ErrorType.InvalidToken
+                     )
+                 }  else if (!Utils().isInternetConnected()) {
+                    Response(
+                        message = "There is no access to the internet.",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InternetConnectionError
+                    )
+                } else {
+                    val creditScoreResponse =
+                        CreditScoreRespository().postGenerateCreditScore(
+                            token = token,
+                            statementKey = statementKey,
+                        )
+                    if (!creditScoreResponse.isError) {
+                        Response(
+                            message = "Success",
+                            isError = false,
+                            responseBody = creditScoreResponse.responseBody
+                        )
+                    } else {
+                        Response(
+                            message = creditScoreResponse.responseBody,
+                            isError = true,
+                            errorType = creditScoreResponse.errorType,
+                            responseBody = null
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                if (!Utils().isInternetConnected()) {
+                    Response(
+                        message = "There is no access to the internet.",
+                        isError = true,
+                        errorType = ErrorType.InternetConnectionError,
                         responseBody = null
                     )
                 } else {
