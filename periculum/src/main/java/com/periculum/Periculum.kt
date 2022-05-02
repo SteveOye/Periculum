@@ -15,7 +15,7 @@ object Periculum {
         runBlocking {
 
         }
-        GlobalScope.launch(Dispatchers.Main) {
+         GlobalScope.launch(Dispatchers.Main) {
             val response = PericulumManager().startAnalytics(
                 phoneNumber = phoneNumber,
                 bvn = bvn,
@@ -67,5 +67,19 @@ object Periculum {
         }
     }
 
-
+    fun getCreditScore(statementKey: String,
+                            token: String,
+                            periculumCallback: PericulumCallback
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val response = PericulumManager().stateCreditScore(statementKey = statementKey,  token = token,)
+            if (response.isError) {
+                periculumCallback.onError(response.message, response.errorType)
+                coroutineContext.cancel()
+            } else {
+                periculumCallback.onSuccess(response.responseBody!!)
+                coroutineContext.cancel()
+            }
+        }
+    }
 }

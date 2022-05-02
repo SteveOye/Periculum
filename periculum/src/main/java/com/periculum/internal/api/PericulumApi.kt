@@ -3,12 +3,8 @@ package com.periculum.internal.api
 import com.google.gson.JsonObject
 import com.periculum.internal.models.AffordabilityModel
 import com.periculum.internal.models.AnalyticsModel
-import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Header
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 
 internal interface PericulumApi {
@@ -27,6 +23,12 @@ internal interface PericulumApi {
 
     @POST("/creditscore/{statementKey}")
     fun postGenerateCreditScore(
+        @Header("Authorization") token: String,
+        @Path("statementKey") statementKey: String,
+    ): Call<JsonObject>
+
+    @GET("/creditscore/{statementKey}")
+    fun getCreditScore(
         @Header("Authorization") token: String,
         @Path("statementKey") statementKey: String,
     ): Call<JsonObject>
