@@ -9,7 +9,7 @@ import com.periculum.models.ErrorType
 
 internal class CreditScoreRespository {
 
-    internal suspend fun postGenerateCreditScore( token: String, statementKey: String): CreditScoreResponseModel{
+    internal suspend fun postGenerateCreditScore( accessToken: String, statementKey: String): CreditScoreResponseModel{
         return try {
             if (!Utils().isInternetConnected()) {
                 CreditScoreResponseModel(
@@ -19,7 +19,7 @@ internal class CreditScoreRespository {
                 )
             } else {
                 val response = RetrofitInstance.api.postGenerateCreditScore(
-                    token = "Bearer $token",
+                    accessToken = "Bearer $accessToken",
                     statementKey = "$statementKey",
                 )
                 val data = response.execute()

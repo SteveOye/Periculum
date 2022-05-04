@@ -172,10 +172,10 @@ internal class PericulumManager {
             }
         }
 
-    suspend fun startGenerateCreditScore(statementKey: String, token: String): Response =
+    suspend fun startGenerateCreditScore(statementKey: String, accessToken: String): Response =
         withContext(Dispatchers.IO) {
             try {
-                 if (token.isEmpty()) {
+                 if (accessToken.isEmpty()) {
                     Response(
                         message = "Invalid access token",
                         responseBody = null,
@@ -199,7 +199,7 @@ internal class PericulumManager {
                 } else {
                     val creditScoreResponse =
                         CreditScoreRespository().postGenerateCreditScore(
-                            token = token,
+                            accessToken = accessToken,
                             statementKey = statementKey,
                         )
                     if (!creditScoreResponse.isError) {

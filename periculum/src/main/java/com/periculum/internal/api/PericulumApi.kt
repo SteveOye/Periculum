@@ -27,7 +27,7 @@ internal interface PericulumApi {
 
     @POST("/creditscore/{statementKey}")
     fun postGenerateCreditScore(
-        @Header("Authorization") token: String,
+        @Header("Authorization") accessToken: String,
         @Path("statementKey") statementKey: String,
     ): Call<JsonObject>
 

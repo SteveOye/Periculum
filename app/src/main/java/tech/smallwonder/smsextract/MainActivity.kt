@@ -371,10 +371,11 @@ fun MainView() {
                         }
                         Button(
                             onClick = {
+                                var key: String = "Enter Key";
 
                                 Periculum.generateCreditScore(
                                     statementKey = "125",
-                                    token = key ,
+                                    accessToken = key ,
                                     periculumCallback = object : PericulumCallbackCreditScore {
                                         override fun onSuccess(response: CreditScoreModel) {
                                             Log.i(TAG, response.baseScore.toString())

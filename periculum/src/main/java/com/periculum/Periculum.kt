@@ -59,13 +59,13 @@ object Periculum {
 
 
     fun generateCreditScore(statementKey: String,
-        token: String,
+        accessToken: String,
         periculumCallback: PericulumCallbackCreditScore
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             val response = PericulumManager().startGenerateCreditScore(
                 statementKey = statementKey,
-                token = token
+                accessToken = accessToken
             )
             if (response.isError) {
                 periculumCallback.onError(response.message, response.errorType)
