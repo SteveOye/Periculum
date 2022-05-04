@@ -8,6 +8,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 
 internal interface PericulumApi {
@@ -23,4 +24,12 @@ internal interface PericulumApi {
         @Header("Authorization") token: String,
         @Body affordabilityModel: AffordabilityModel
     ): Call<JsonObject>
+
+    @POST("/creditscore/{statementKey}")
+    fun postGenerateCreditScore(
+        @Header("Authorization") accessToken: String,
+        @Path("statementKey") statementKey: String,
+    ): Call<JsonObject>
+
+
 }

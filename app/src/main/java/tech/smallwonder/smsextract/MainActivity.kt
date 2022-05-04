@@ -20,8 +20,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.periculum.Periculum
+import com.periculum.internal.models.CreditScoreModel
 import com.periculum.models.ErrorType
 import com.periculum.models.PericulumCallback
+import com.periculum.models.PericulumCallbackCreditScore
 import tech.smallwonder.smsextract.ui.theme.SmsExtractTheme
 import java.text.SimpleDateFormat
 import java.util.*
@@ -366,6 +368,55 @@ fun MainView() {
                             modifier = Modifier.padding(20.dp)
                         ) {
                             Text(text = "start process")
+                        }
+                        Button(
+                            onClick = {
+                                var key: String = "Enter Key";
+
+                                Periculum.generateCreditScore(
+                                    statementKey = "125",
+                                    accessToken = key ,
+                                    periculumCallback = object : PericulumCallbackCreditScore {
+                                        override fun onSuccess(response: CreditScoreModel) {
+                                            Log.i(TAG, response.baseScore.toString())
+                                            state.value = false
+                                            text.value = "Success --->\t\t $response"
+                                        }
+
+                                        override fun onError(
+                                            message: String,
+                                            errorType: ErrorType
+                                        ) {
+                                            text.value = "Error type ---> $errorType" // Error Type
+                                            text.value = "Error message ---> $message" // Error message
+                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
+                                                .show()
+                                            state.value = false
+
+                                            when (errorType) { // handle response error
+                                                ErrorType.InternetConnectionError -> {
+                                                    Log.e(TAG, "InternetConnectionError")
+                                                }
+                                                ErrorType.NetworkRequest -> {
+                                                    Log.e(TAG, "NetworkRequest")
+                                                }
+                                                ErrorType.InvalidToken -> {
+                                                    Log.e(TAG, "InvalidToken")
+                                                }
+                                                ErrorType.InvalidData -> {
+                                                    Log.e(TAG, "InvalidData")
+                                                }
+                                                ErrorType.UnknownError -> {
+                                                    Log.e(TAG, "UnknownError")
+                                                }
+                                            }
+                                        }
+                                    }
+                                )
+                            },
+                            modifier = Modifier.padding(20.dp)
+                        ) {
+                            Text(text = "start score")
                         }
                         Text(text = text.value.replace("\\n", "\n"))
                     }

@@ -6,8 +6,6 @@ import android.content.pm.PackageManager
 import android.os.BatteryManager
 import android.os.Build
 import android.telephony.TelephonyManager
-import android.util.Log
-import com.google.gson.Gson
 import com.periculum.internal.api.RetrofitInstance
 import com.periculum.internal.models.*
 import com.periculum.internal.utils.PericulumDependency
