@@ -1,8 +1,15 @@
 package com.periculum
 
+import android.util.Log
 import com.periculum.internal.PericulumManager
 import com.periculum.models.PericulumCallback
+import com.periculum.models.Response
 import kotlinx.coroutines.*
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.periculum.internal.models.CreditScoreModel
+import com.periculum.models.PericulumCallbackCreditScore
+
 
 object Periculum {
 
@@ -16,7 +23,7 @@ object Periculum {
 
         }
         GlobalScope.launch(Dispatchers.Main) {
-            val response = PericulumManager().startAnalytics(
+            val response: Response = PericulumManager().startAnalytics(
                 phoneNumber = phoneNumber,
                 bvn = bvn,
                 token = token
@@ -53,19 +60,25 @@ object Periculum {
 
     fun generateCreditScore(statementKey: String,
         token: String,
-        periculumCallback: PericulumCallback
+        periculumCallback: PericulumCallbackCreditScore
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            val response = PericulumManager().startGenerateCreditScore(statementKey = statementKey,  token = token,)
+            val response = PericulumManager().startGenerateCreditScore(
+                statementKey = statementKey,
+                token = token
+            )
             if (response.isError) {
                 periculumCallback.onError(response.message, response.errorType)
                 coroutineContext.cancel()
             } else {
-                periculumCallback.onSuccess(response.responseBody!!)
+                val gson: Gson = GsonBuilder().create()
+                val creditScoreModel: CreditScoreModel = gson.fromJson(response.responseBody!!, CreditScoreModel::class.java)
+
+                Log.d("Response", creditScoreModel.baseScore.toString())
+                periculumCallback.onSuccess(creditScoreModel)
                 coroutineContext.cancel()
             }
         }
     }
-
 
 }

@@ -20,8 +20,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.periculum.Periculum
+import com.periculum.internal.models.CreditScoreModel
 import com.periculum.models.ErrorType
 import com.periculum.models.PericulumCallback
+import com.periculum.models.PericulumCallbackCreditScore
 import tech.smallwonder.smsextract.ui.theme.SmsExtractTheme
 import java.text.SimpleDateFormat
 import java.util.*
@@ -369,14 +371,14 @@ fun MainView() {
                         }
                         Button(
                             onClick = {
-                                var key: String = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoibnVjbGV1c2lzIiwiaXNzIjoiaHR0cHM6Ly9wZXJpY3VsdW0tdGVjaG5vbG9naWVzLWluYy5hdXRoMC5jb20vIiwic3ViIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnJAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vYXBpLmluc2lnaHRzLXBlcmljdWx1bS5jb20iLCJpYXQiOjE2NTA5MTQ2NzksImV4cCI6MTY1MTUxOTQ3OSwiYXpwIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnIiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.X6i4rNvo21ycR4l8Vbdovkyhc7lBYEdQ3zOzexOLO00XfcTO08wihZXuCHESCuYWxej39FLgNvoYINIqenRTEJkkyWR08KC_ONDUXpYvmJivFfmMzaBcDv4J9UvPxb0den-LMT-dfbAiwqQGXL1DadAo3nMHuzUFVpeLcJZ4lqQplulLPKuq9Mbsjfe4XC3Y6pm0sBd-0KI_MMYEBKHIw9U_arR_wf7GmcD3R_DZ-kzOwvmknu4VkmhGlAgzrZqq2uHUXzHBUOY99i_P2PktB5Ty7d9yKksSi5fJgQn6yTbRKghu5keZQ5lwaTfuq5PGovSIF-jDwiFHhf0qT3URsw";
+                                var key: String = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoibnVjbGV1c2lzIiwiaXNzIjoiaHR0cHM6Ly9wZXJpY3VsdW0tdGVjaG5vbG9naWVzLWluYy5hdXRoMC5jb20vIiwic3ViIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnJAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vYXBpLmluc2lnaHRzLXBlcmljdWx1bS5jb20iLCJpYXQiOjE2NTE2MDY1NzUsImV4cCI6MTY1MjIxMTM3NSwiYXpwIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnIiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.TrkvsuMM4cMqBuPalIhvRc81GJxl1ssE2JzUr1GpaaviQT43yi73sdUYhv2H9dYw6XsTTO0tt2yheH6NtiJcOQSrwwPM_fA292h9z_QKLk_QCduWDQM2NhC-C25AXjL7E6fcHVgd6IvGQFaf0y7CMpWjhKTa32VJ1ITyfPtNgjm60u-j_WeEkDmZngCwHHXrCV8iskKfKJRfZL-Ft7QBhXn2OY6t6XWj6QR1vaEZc7nU6SWYD03DHw11taEvy6Z0Y61_2MKaozUtJVCIUcZK16le-CMQUbkKpSY_SYszXXAsPwcdWhOcFFuTsnHVtCN-0KP7-FAUCr8o3l9qZcWK4w";
 
                                 Periculum.generateCreditScore(
                                     statementKey = "125",
                                     token = key ,
-                                    periculumCallback = object : PericulumCallback {
-                                        override fun onSuccess(response: String) {
-                                            Log.i(TAG, response)
+                                    periculumCallback = object : PericulumCallbackCreditScore {
+                                        override fun onSuccess(response: CreditScoreModel) {
+                                            Log.i(TAG, response.baseScore.toString())
                                             state.value = false
                                             text.value = "Success --->\t\t $response"
                                         }

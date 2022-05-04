@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 
 internal class PericulumManager {
 
-    suspend fun startAnalytics(phoneNumber: String, bvn: String, token: String): Response =
+    suspend fun startAnalytics(phoneNumber: String, bvn: String, token: String) =
         withContext(Dispatchers.IO) {
             try {
                 if (token.isEmpty()) {
