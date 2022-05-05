@@ -5,7 +5,7 @@ import com.periculum.internal.models.StatementTransactionResponse
 import com.periculum.internal.utils.Utils
 import com.periculum.models.ErrorType
 
-internal class StatementRepository {
+internal class StatementTransactionRepository {
     internal suspend fun getStatementTransaction( accessToken: String, statementKey: String): StatementTransactionResponse {
         return try {
             if (!Utils().isInternetConnected()) {
@@ -46,5 +46,4 @@ internal class StatementRepository {
             )
         }
     }
-
 }

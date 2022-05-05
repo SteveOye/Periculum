@@ -5,7 +5,6 @@ import com.periculum.internal.repository.*
 import com.periculum.internal.repository.AffordabilityRepository
 import com.periculum.internal.repository.AnalyticsRepository
 import com.periculum.internal.repository.CreditScoreRepository
-import com.periculum.internal.repository.StatementRepository
 import com.periculum.internal.utils.Utils
 import com.periculum.models.Response
 import com.periculum.models.ErrorType
@@ -328,7 +327,7 @@ internal class PericulumManager {
                     )
                 } else {
                     val statementResponse=
-                        StatementRepository().getStatementTransaction(
+                        StatementTransactionRepository().getStatementTransaction(
                             accessToken = accessToken,
                             statementKey = statementKey,
                         )
