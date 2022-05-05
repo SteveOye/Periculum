@@ -10,9 +10,16 @@ interface PericulumCallback {
     fun onError(message: String, errorType: ErrorType)
 }
 
-interface PericulumCallbackCreditScore {
+interface CallbackGenerateCreditScore {
 
     fun onSuccess(response: CreditScoreModel )
+
+    fun onError(message: String, errorType: ErrorType)
+}
+
+interface CallbackGetCreditScore {
+
+    fun onSuccess(response: Array<CreditScoreModel> )
 
     fun onError(message: String, errorType: ErrorType)
 }
