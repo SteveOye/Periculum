@@ -235,4 +235,68 @@ internal class PericulumManager {
                 }
             }
         }
+
+    suspend fun startGetCreditScore(statementKey: String, accessToken: String): Response =
+        withContext(Dispatchers.IO) {
+            try {
+                if (accessToken.isEmpty()) {
+                    Response(
+                        message = "Invalid access token",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InvalidToken
+                    )
+                } else if (statementKey.isEmpty()) {
+                    Response(
+                        message = "Invalid Statement key",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InvalidToken
+                    )
+                }  else if (!Utils().isInternetConnected()) {
+                    Response(
+                        message = "There is no access to the internet.",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InternetConnectionError
+                    )
+                } else {
+                    val creditScoreResponse=
+                        CreditScoreRespository().getCreditScore(
+                            accessToken = accessToken,
+                            statementKey = statementKey,
+                        )
+                    if (!creditScoreResponse.isError) {
+                        Response(
+                            message = "Success",
+                            isError = false,
+                            responseBody = creditScoreResponse.responseBody
+                        )
+                    } else {
+                        Response(
+                            message = creditScoreResponse.responseBody,
+                            isError = true,
+                            errorType = creditScoreResponse.errorType,
+                            responseBody = null
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                if (!Utils().isInternetConnected()) {
+                    Response(
+                        message = "There is no access to the internet.",
+                        isError = true,
+                        errorType = ErrorType.InternetConnectionError,
+                        responseBody = null
+                    )
+                } else {
+                    Response(
+                        message = "Error Occurred",
+                        isError = true,
+                        errorType = ErrorType.UnknownError,
+                        responseBody = null
+                    )
+                }
+            }
+        }
 }
