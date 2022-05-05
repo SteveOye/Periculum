@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.periculum.internal.models.CreditScore
 import com.periculum.internal.models.StatementTransaction
+import com.periculum.internal.models.Statements
 import com.periculum.models.*
 
 
@@ -118,6 +119,29 @@ object Periculum {
                 val gson: Gson = GsonBuilder().create()
                 val statements: Array<StatementTransaction> = gson.fromJson(response.responseBody!!, Array<StatementTransaction>::class.java)
 
+                periculumCallback.onSuccess(statements)
+                coroutineContext.cancel()
+            }
+        }
+    }
+
+    fun getStatement(statementKey: String,
+                            accessToken: String,
+                            periculumCallback: GetStatementCallback
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val response = PericulumManager().startGetStatement(
+                statementKey = statementKey,
+                accessToken = accessToken
+            )
+            if (response.isError) {
+                periculumCallback.onError(response.message, response.errorType)
+                coroutineContext.cancel()
+            } else {
+                val gson: Gson = GsonBuilder().create()
+                val statements: Statements = gson.fromJson(response.responseBody!!, Statements::class.java)
+
+                Log.d("Response", statements.processingStatus.toString())
                 periculumCallback.onSuccess(statements)
                 coroutineContext.cancel()
             }

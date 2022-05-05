@@ -44,6 +44,6 @@ internal interface PericulumApi {
     fun getStatement(
         @Header("Authorization") accessToken: String,
         @Path("statementKey") statementKey: String,
-    ): Call<JsonArray>
+    ): Call<JsonObject>
 
 }
