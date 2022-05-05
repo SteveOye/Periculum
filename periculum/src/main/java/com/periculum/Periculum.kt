@@ -6,7 +6,7 @@ import kotlinx.coroutines.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.periculum.internal.models.CreditScore
-import com.periculum.internal.models.Statements
+import com.periculum.internal.models.StatementTransaction
 import com.periculum.models.*
 
 
@@ -116,7 +116,7 @@ object Periculum {
                 coroutineContext.cancel()
             } else {
                 val gson: Gson = GsonBuilder().create()
-                val statements: Array<Statements> = gson.fromJson(response.responseBody!!, Array<Statements>::class.java)
+                val statements: Array<StatementTransaction> = gson.fromJson(response.responseBody!!, Array<StatementTransaction>::class.java)
 
                 periculumCallback.onSuccess(statements)
                 coroutineContext.cancel()

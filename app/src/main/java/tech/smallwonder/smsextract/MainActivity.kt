@@ -21,10 +21,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.periculum.Periculum
 import com.periculum.internal.models.CreditScore
-import com.periculum.internal.models.Statements
+import com.periculum.internal.models.StatementTransaction
 import com.periculum.models.*
 import tech.smallwonder.smsextract.ui.theme.SmsExtractTheme
-import java.sql.Statement
 
 const val TAG = "MainActivity"
 class MainActivity : ComponentActivity() {
@@ -471,7 +470,7 @@ fun MainView() {
                                     statementKey = "125",
                                     accessToken = key ,
                                     periculumCallback = object : GetStatementTransactionCallback {
-                                        override fun onSuccess(response: Array<Statements>) {
+                                        override fun onSuccess(response: Array<StatementTransaction>) {
                                             Log.i(TAG, response[0].description.toString())
                                             state.value = false
                                             text.value = "Success --->\t\t ${response.size}"

@@ -1,7 +1,7 @@
 package com.periculum.models
 
 import com.periculum.internal.models.CreditScore
-import com.periculum.internal.models.Statements
+import com.periculum.internal.models.StatementTransaction
 
 
 interface PericulumCallback {
@@ -27,7 +27,7 @@ interface GetCreditScoreCallback {
 
 interface GetStatementTransactionCallback {
 
-    fun onSuccess(response: Array<Statements> )
+    fun onSuccess(response: Array<StatementTransaction> )
 
     fun onError(message: String, errorType: ErrorType)
 }

@@ -1,15 +1,15 @@
 package com.periculum.internal.repository
 
 import com.periculum.internal.api.RetrofitInstance
-import com.periculum.internal.models.StatementResponse
+import com.periculum.internal.models.StatementTransactionResponse
 import com.periculum.internal.utils.Utils
 import com.periculum.models.ErrorType
 
 internal class StatementRepository {
-    internal suspend fun getStatementTransaction( accessToken: String, statementKey: String): StatementResponse {
+    internal suspend fun getStatementTransaction( accessToken: String, statementKey: String): StatementTransactionResponse {
         return try {
             if (!Utils().isInternetConnected()) {
-                StatementResponse(
+                StatementTransactionResponse(
                     "There is no access to the internet. ",
                     isError = true,
                     errorType = ErrorType.InternetConnectionError
@@ -21,16 +21,16 @@ internal class StatementRepository {
                 )
                 val data = response.execute()
                 if (data.isSuccessful) {
-                    StatementResponse(data.body()!!.toString(), isError = false)
+                    StatementTransactionResponse(data.body()!!.toString(), isError = false)
                 } else {
                     if(data.code() == 401) {
-                        StatementResponse(
+                        StatementTransactionResponse(
                             responseBody = "Invalid Token. Unauthorized.",
                             true,
                             errorType = ErrorType.InvalidToken
                         )
                     }else {
-                        StatementResponse(
+                        StatementTransactionResponse(
                             responseBody = data.message(),
                             true,
                             errorType = ErrorType.NetworkRequest
@@ -39,7 +39,7 @@ internal class StatementRepository {
                 }
             }
         } catch (e: Exception) {
-            StatementResponse(
+            StatementTransactionResponse(
                 "${e.message}",
                 isError = true,
                 errorType = ErrorType.NetworkRequest
