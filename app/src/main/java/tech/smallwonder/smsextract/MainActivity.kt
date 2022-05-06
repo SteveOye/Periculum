@@ -58,6 +58,7 @@ fun MainView() {
         "Affordability",
     )
 
+    var key: String = "Enter Key"
     Column(Modifier.fillMaxWidth()) {
         TabRow(selectedTabIndex = tabIndex) {
             tabData.forEachIndexed { index, text ->
