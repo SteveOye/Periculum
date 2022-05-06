@@ -2,7 +2,8 @@ package com.periculum.internal.models
 
 import com.periculum.models.ErrorType
 
-internal data class CreditScoreResponseModel(
+data class StatementTransactionResponse (
     val responseBody: String = "",
     val isError: Boolean,
-    val errorType: ErrorType = ErrorType.Null)
+    val errorType: ErrorType = ErrorType.Null
+)

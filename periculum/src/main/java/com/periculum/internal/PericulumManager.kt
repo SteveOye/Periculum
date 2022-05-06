@@ -1,9 +1,10 @@
 package com.periculum.internal
 
 import com.periculum.internal.models.AffordabilityModel
+import com.periculum.internal.repository.*
 import com.periculum.internal.repository.AffordabilityRepository
 import com.periculum.internal.repository.AnalyticsRepository
-import com.periculum.internal.repository.CreditScoreRespository
+import com.periculum.internal.repository.CreditScoreRepository
 import com.periculum.internal.utils.Utils
 import com.periculum.models.Response
 import com.periculum.models.ErrorType
@@ -198,7 +199,7 @@ internal class PericulumManager {
                     )
                 } else {
                     val creditScoreResponse =
-                        CreditScoreRespository().postGenerateCreditScore(
+                        CreditScoreRepository().postGenerateCreditScore(
                             accessToken = accessToken,
                             statementKey = statementKey,
                         )
@@ -262,7 +263,7 @@ internal class PericulumManager {
                     )
                 } else {
                     val creditScoreResponse=
-                        CreditScoreRespository().getCreditScore(
+                        CreditScoreRepository().getCreditScore(
                             accessToken = accessToken,
                             statementKey = statementKey,
                         )
@@ -277,6 +278,70 @@ internal class PericulumManager {
                             message = creditScoreResponse.responseBody,
                             isError = true,
                             errorType = creditScoreResponse.errorType,
+                            responseBody = null
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                if (!Utils().isInternetConnected()) {
+                    Response(
+                        message = "There is no access to the internet.",
+                        isError = true,
+                        errorType = ErrorType.InternetConnectionError,
+                        responseBody = null
+                    )
+                } else {
+                    Response(
+                        message = "Error Occurred",
+                        isError = true,
+                        errorType = ErrorType.UnknownError,
+                        responseBody = null
+                    )
+                }
+            }
+        }
+
+    suspend fun startGetStatementTransaction(statementKey: String, accessToken: String): Response =
+        withContext(Dispatchers.IO) {
+            try {
+                if (accessToken.isEmpty()) {
+                    Response(
+                        message = "Invalid access token",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InvalidToken
+                    )
+                } else if (statementKey.isEmpty()) {
+                    Response(
+                        message = "Invalid Statement key",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InvalidToken
+                    )
+                }  else if (!Utils().isInternetConnected()) {
+                    Response(
+                        message = "There is no access to the internet.",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InternetConnectionError
+                    )
+                } else {
+                    val statementResponse=
+                        StatementTransactionRepository().getStatementTransaction(
+                            accessToken = accessToken,
+                            statementKey = statementKey,
+                        )
+                    if (!statementResponse.isError) {
+                        Response(
+                            message = "Success",
+                            isError = false,
+                            responseBody = statementResponse.responseBody
+                        )
+                    } else {
+                        Response(
+                            message = statementResponse.responseBody,
+                            isError = true,
+                            errorType = statementResponse.errorType,
                             responseBody = null
                         )
                     }

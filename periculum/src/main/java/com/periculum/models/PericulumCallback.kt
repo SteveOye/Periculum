@@ -1,6 +1,7 @@
 package com.periculum.models
 
-import com.periculum.internal.models.CreditScoreModel
+import com.periculum.internal.models.CreditScore
+import com.periculum.internal.models.StatementTransaction
 
 
 interface PericulumCallback {
@@ -10,16 +11,23 @@ interface PericulumCallback {
     fun onError(message: String, errorType: ErrorType)
 }
 
-interface CallbackGenerateCreditScore {
+interface GenerateCreditScoreCallback {
 
-    fun onSuccess(response: CreditScoreModel )
+    fun onSuccess(response: CreditScore )
 
     fun onError(message: String, errorType: ErrorType)
 }
 
-interface CallbackGetCreditScore {
+interface GetCreditScoreCallback {
 
-    fun onSuccess(response: Array<CreditScoreModel> )
+    fun onSuccess(response: Array<CreditScore> )
+
+    fun onError(message: String, errorType: ErrorType)
+}
+
+interface GetStatementTransactionCallback {
+
+    fun onSuccess(response: Array<StatementTransaction> )
 
     fun onError(message: String, errorType: ErrorType)
 }

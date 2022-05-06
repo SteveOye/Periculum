@@ -1,18 +1,16 @@
 package com.periculum.internal.repository
 
 import com.periculum.internal.api.RetrofitInstance
-import com.periculum.internal.models.AffordabilityResponseModel
-import com.periculum.internal.models.CreditScoreResponseModel
+import com.periculum.internal.models.CreditScoreResponse
 import com.periculum.internal.utils.Utils
-import java.util.*
 import com.periculum.models.ErrorType
 
-internal class CreditScoreRespository {
+internal class CreditScoreRepository {
 
-    internal suspend fun postGenerateCreditScore( accessToken: String, statementKey: String): CreditScoreResponseModel{
+    internal suspend fun postGenerateCreditScore( accessToken: String, statementKey: String): CreditScoreResponse{
         return try {
             if (!Utils().isInternetConnected()) {
-                CreditScoreResponseModel(
+                CreditScoreResponse(
                     "There is no access to the internet. ",
                     isError = true,
                     errorType = ErrorType.InternetConnectionError
@@ -24,16 +22,16 @@ internal class CreditScoreRespository {
                 )
                 val data = response.execute()
                 if (data.isSuccessful) {
-                    CreditScoreResponseModel(data.body()!!.toString(), isError = false)
+                    CreditScoreResponse(data.body()!!.toString(), isError = false)
                 } else {
                     if(data.code() == 401) {
-                        CreditScoreResponseModel(
+                        CreditScoreResponse(
                             responseBody = "Invalid Token. Unauthorized.",
                             true,
                             errorType = ErrorType.InvalidToken
                         )
                     }else {
-                        CreditScoreResponseModel(
+                        CreditScoreResponse(
                             responseBody = data.message(),
                             true,
                             errorType = ErrorType.NetworkRequest
@@ -42,7 +40,7 @@ internal class CreditScoreRespository {
                 }
             }
         } catch (e: Exception) {
-            CreditScoreResponseModel(
+            CreditScoreResponse(
                "${e.message}",
                 isError = true,
                 errorType = ErrorType.NetworkRequest
@@ -50,10 +48,10 @@ internal class CreditScoreRespository {
         }
     }
 
-    internal suspend fun getCreditScore( accessToken: String, statementKey: String): CreditScoreResponseModel{
+    internal suspend fun getCreditScore( accessToken: String, statementKey: String): CreditScoreResponse{
         return try {
             if (!Utils().isInternetConnected()) {
-                CreditScoreResponseModel(
+                CreditScoreResponse(
                     "There is no access to the internet. ",
                     isError = true,
                     errorType = ErrorType.InternetConnectionError
@@ -65,16 +63,16 @@ internal class CreditScoreRespository {
                 )
                 val data = response.execute()
                 if (data.isSuccessful) {
-                    CreditScoreResponseModel(data.body()!!.toString(), isError = false)
+                    CreditScoreResponse(data.body()!!.toString(), isError = false)
                 } else {
                     if(data.code() == 401) {
-                        CreditScoreResponseModel(
+                        CreditScoreResponse(
                             responseBody = "Invalid Token. Unauthorized.",
                             true,
                             errorType = ErrorType.InvalidToken
                         )
                     }else {
-                        CreditScoreResponseModel(
+                        CreditScoreResponse(
                             responseBody = data.message(),
                             true,
                             errorType = ErrorType.NetworkRequest
@@ -83,7 +81,7 @@ internal class CreditScoreRespository {
                 }
             }
         } catch (e: Exception) {
-            CreditScoreResponseModel(
+            CreditScoreResponse(
                 "${e.message}",
                 isError = true,
                 errorType = ErrorType.NetworkRequest
