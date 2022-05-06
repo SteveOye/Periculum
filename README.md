@@ -401,6 +401,204 @@ class MainActivity : ComponentActivity() {
 }
 
 ```
+
+**Get Existing Credit Score**
+
+```kotlin
+Periculum.getCreditScore(
+	statementKey = "125", //Statement Key
+    accessToken = key , // Token
+    periculumCallback = object : GetCreditScoreCallback {
+        override fun onSuccess(response: Array<CreditScore>) {
+            Log.i(TAG, response[0].baseScore.toString())
+        }
+        override fun onError(
+        	message: String,
+                errorType: ErrorType
+        ) {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            when (errorType) { // handle response error
+             	ErrorType.InternetConnectionError -> {
+                    	Log.e(TAG, "InternetConnectionError")
+            	}
+                ErrorType.NetworkRequest -> {
+                	Log.e(TAG, "NetworkRequest")
+                }
+                ErrorType.InvalidToken -> {
+                	Log.e(TAG, "InvalidToken")
+                }...
+            }
+		}
+	}
+)
+```
+
+
+**Get Statement Transaction**
+
+```kotlin
+Periculum.getCreditScore(
+	statementKey = "125", //Statement Key
+        accessToken = key , // Token
+        periculumCallback = object : GetStatementTransactionCallback {
+        	override fun onSuccess(response: Array<StatementTransaction>) {
+                	Log.i(TAG, response[0].description.toString()
+            }
+            override fun onError(
+            	message: String,
+                    errorType: ErrorType
+            ) {
+            	text.value = "Error type ---> $errorType" // Error Type
+                    text.value = "Error message ---> $message" // Error message
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                     when (errorType) { // handle response error
+                     	ErrorType.InternetConnectionError -> {
+                            	Log.e(TAG, "InternetConnectionError")
+                    	}
+                            ErrorType.NetworkRequest -> {
+                            	Log.e(TAG, "NetworkRequest")
+                            }
+                            ErrorType.InvalidToken -> {
+                            	Log.e(TAG, "InvalidToken")
+                            }
+			...
+			}
+		}
+	
+)
+```
+
+**Get Existing Statement Analytics**
+
+```kotlin
+Periculum.getStatement(
+	statementKey = "125", //Statement Key
+    accessToken = key , // Token
+    periculumCallback = object : GetStatementCallback {
+    	override fun onSuccess(response: Statements) {
+            	Log.i(TAG, response[0].description.toString()
+        }
+        
+        override fun onError(
+        	message: String,
+                errorType: ErrorType
+        ) {
+            text.value = "Error type ---> $errorType" // Error Type
+            text.value = "Error message ---> $message" // Error message
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+             when (errorType) { // handle response error
+             	ErrorType.InternetConnectionError -> {
+                    	Log.e(TAG, "InternetConnectionError")
+            	}
+                ErrorType.NetworkRequest -> {
+                	Log.e(TAG, "NetworkRequest")
+                }
+                ErrorType.InvalidToken -> {
+                	Log.e(TAG, "InvalidToken")
+                } ...
+            }
+        }
+	}
+)
+```
+
+**Get Existing Statement Affordability Analysis**
+
+```kotlin
+
+Periculum.getAfordability(
+	statementKey = "125", //Statement Key
+    accessToken = key , // Token
+    periculumCallback = object : GetAffordabilityCallback {
+    	override fun onSuccess(response: Array<Affordability>) {
+            	Log.i(TAG, response[0].createdDate.toString()
+        }
+
+        override fun onError(
+        	message: String,
+                errorType: ErrorType
+        ) {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            when (errorType) { // handle response error
+                ErrorType.InternetConnectionError -> {
+                    	Log.e(TAG, "InternetConnectionError")
+                }
+                ErrorType.NetworkRequest -> {
+                	Log.e(TAG, "NetworkRequest")
+                }
+                ErrorType.InvalidToken -> {
+                	Log.e(TAG, "InvalidToken")
+                }
+		            ...
+		}
+	}
+)
+```
+
+
+#### Customer Identification Parameters
+
+###### ClientData
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `statementKey` | `String` | **required**. |
+| `identification` | `List<ClientIdentification>` | **required**. A list of different identification means |
+
+###### ClientIdentification
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `identifierName` | `String` | **required** Identification type name e.g: bvn or nin. |
+| `identifierValue` | `String` | **required**. Identification value/code.|
+
+
+**Attach Customer Identification Information To A Statement**
+
+```kotlin
+
+//Pass in a ClientData containing the key and a list of ClientIdentification
+
+val identificationData = 
+	ClientIdentification(
+		identifierName = "bvn",
+		identifierValue ="2345"
+	)
+val listOfItems = 
+mutableListOf<ClientIdentification>(identificationData)
+
+val clientData = ClientData(
+	statementKey = 125,
+	identificationData = listOfItems
+)
+
+Periculum.patchClientIdentification(
+    accessToken = key , // Token
+	clientData = clientData, //body ClientData
+    periculumCallback = object : PatchIdentificationCallback {
+    	override fun onSuccess(response: String) {
+            Log.i(TAG, response)
+        }
+         override fun onError(
+            message: String,
+            errorType: ErrorType
+        ) {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+             when (errorType) { // handle response error
+                ErrorType.InternetConnectionError -> {
+                    	Log.e(TAG, "InternetConnectionError")
+                }
+                ErrorType.NetworkRequest -> {
+                	Log.e(TAG, "NetworkRequest")
+                }
+                ErrorType.InvalidToken -> {
+                	Log.e(TAG, "InvalidToken")
+                }...
+            }	
+	   }
+	   
+    }
+)
+```
+
 ## Required Permission
 
 The permissions that must be granted in order for this library to function are listed below.
