@@ -12,6 +12,13 @@ interface PericulumCallback {
     fun onError(message: String, errorType: ErrorType)
 }
 
+interface PostAffordabilityCallback {
+
+    fun onSuccess(response: Affordability )
+
+    fun onError(message: String, errorType: ErrorType)
+}
+
 interface GenerateCreditScoreCallback {
 
     fun onSuccess(response: CreditScore )

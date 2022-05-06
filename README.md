@@ -159,6 +159,18 @@ to handle error cases.
 | `InvalidToken`      | Invalid access token |
 | `InvalidData`      | An invalid parameter has been passed. |
 
+#### Callback Types
+
+These are the callback for every request made
+
+| action | method  | Callback                      | Description             |
+| :-------- | :-------- | :-------------------------------- |
+| Generate Credit Score    | `generateCreditScore`  |  `GenerateCreditScoreCallback`     |  Returns a Credit Score Object  |
+| Get Existing Credit Score      | `getCreditScore`  |  `GetCreditScoreCallback`   |  Return an Array of CreditScore object |
+| Get Statement Transaction   | `getStatementTransaction`  | `GetStatementTransactionCallback`  |  Returns an Array of StatementTransaction object |
+|  Get Existing Statement Analytics  | `getStatment`  |  `GetStatementCallback`  |   Returns a Statement object  |
+| Get Existing Statement Affordability Analysis  | `getAffordability`  | `GetAffordabilityCallback` | Returns an Array of Affordability object |
+| Attach Customer Identification Information To A Statement  | `patchClientIdentification`  | `PatchIdentificationCallback`      | Returns a statusCode 200 on success|
 
 
 ``` kotlin
@@ -330,6 +342,64 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+```
+
+**Generate Credit Score**
+
+```
+
+class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            SmsExtractTheme {
+                Surface(color = MaterialTheme.colors.background) {
+
+                    Button(
+                        onClick = {
+                            Periculum.generateCreditScore(
+                                statementKey = "932", // Pass a valid statement key
+                                accessToken = "", // token generated from periculum api
+                                object : GenerateCreditScoreCallback { //Callback response returns a CreditScore Model
+                                    override fun onSuccess(response: CreditScore) {
+                                        Log.i(TAG, response)
+                                    }
+
+                                    override fun onError(
+                                        message: String,
+                                        errorType: ErrorType
+                                    ) {
+                                        Log.i(TAG, "Error type ---> $errorType") // Error Type
+                                        Log.i(TAG, "Error message ---> $message") // Error message
+
+                                        when (errorType) { // handle response error
+                                            ErrorType.InternetConnectionError -> {
+                                                Log.e(TAG, "InternetConnectionError")
+                                            }
+                                            ErrorType.NetworkRequest -> {
+                                                Log.e(TAG, "NetworkRequest")
+                                            }
+                                            ErrorType.InvalidToken -> {
+                                                Log.e(TAG, "InvalidToken")
+                                            }
+                                            ...
+                                        }
+                                    }
+                                }
+                            )
+                        },
+                    ) {
+                        Text(text = "Generate Credit Score")
+                    }
+
+
+                }
+            }
+        }
+    }
+}
+
 ```
 ## Required Permission
 
