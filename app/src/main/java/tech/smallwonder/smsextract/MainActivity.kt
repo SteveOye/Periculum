@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.periculum.Periculum
 import com.periculum.internal.models.CreditScore
 import com.periculum.internal.models.StatementTransaction
+import com.periculum.internal.models.Statements
 import com.periculum.models.*
 import tech.smallwonder.smsextract.ui.theme.SmsExtractTheme
 
@@ -57,8 +58,7 @@ fun MainView() {
         "Affordability",
     )
 
-    var key: String = "enter key"
-
+    var key: String = "Enter Key"
     Column(Modifier.fillMaxWidth()) {
         TabRow(selectedTabIndex = tabIndex) {
             tabData.forEachIndexed { index, text ->
@@ -510,6 +510,54 @@ fun MainView() {
                             modifier = Modifier.padding(20.dp)
                         ) {
                             Text(text = "start get statement transaction")
+                        }
+                        Button(
+                            onClick = {
+
+                                Periculum.getStatement(
+                                    statementKey = "125",
+                                    accessToken = key ,
+                                    periculumCallback = object : GetStatementCallback {
+                                        override fun onSuccess(response: Statements) {
+                                            Log.i(TAG, response.statementType.toString())
+                                            state.value = false
+                                            text.value = "Success --->\t\t ${response}"
+                                        }
+
+                                        override fun onError(
+                                            message: String,
+                                            errorType: ErrorType
+                                        ) {
+                                            text.value = "Error type ---> $errorType" // Error Type
+                                            text.value = "Error message ---> $message" // Error message
+                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
+                                                .show()
+                                            state.value = false
+
+                                            when (errorType) { // handle response error
+                                                ErrorType.InternetConnectionError -> {
+                                                    Log.e(TAG, "InternetConnectionError")
+                                                }
+                                                ErrorType.NetworkRequest -> {
+                                                    Log.e(TAG, "NetworkRequest")
+                                                }
+                                                ErrorType.InvalidToken -> {
+                                                    Log.e(TAG, "InvalidToken")
+                                                }
+                                                ErrorType.InvalidData -> {
+                                                    Log.e(TAG, "InvalidData")
+                                                }
+                                                ErrorType.UnknownError -> {
+                                                    Log.e(TAG, "UnknownError")
+                                                }
+                                            }
+                                        }
+                                    }
+                                )
+                            },
+                            modifier = Modifier.padding(20.dp)
+                        ) {
+                            Text(text = "start statement")
                         }
                         Text(text = text.value.replace("\\n", "\n"))
                     }

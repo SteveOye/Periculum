@@ -198,22 +198,22 @@ internal class PericulumManager {
                         errorType = ErrorType.InternetConnectionError
                     )
                 } else {
-                    val creditScoreResponse =
+                    val statementsResponse =
                         CreditScoreRepository().postGenerateCreditScore(
                             accessToken = accessToken,
                             statementKey = statementKey,
                         )
-                    if (!creditScoreResponse.isError) {
+                    if (!statementsResponse.isError) {
                         Response(
                             message = "Success",
                             isError = false,
-                            responseBody = creditScoreResponse.responseBody
+                            responseBody = statementsResponse.responseBody
                         )
                     } else {
                         Response(
-                            message = creditScoreResponse.responseBody,
+                            message = statementsResponse.responseBody,
                             isError = true,
-                            errorType = creditScoreResponse.errorType,
+                            errorType = statementsResponse.errorType,
                             responseBody = null
                         )
                     }
@@ -262,22 +262,22 @@ internal class PericulumManager {
                         errorType = ErrorType.InternetConnectionError
                     )
                 } else {
-                    val creditScoreResponse=
+                    val statementsResponse=
                         CreditScoreRepository().getCreditScore(
                             accessToken = accessToken,
                             statementKey = statementKey,
                         )
-                    if (!creditScoreResponse.isError) {
+                    if (!statementsResponse.isError) {
                         Response(
                             message = "Success",
                             isError = false,
-                            responseBody = creditScoreResponse.responseBody
+                            responseBody = statementsResponse.responseBody
                         )
                     } else {
                         Response(
-                            message = creditScoreResponse.responseBody,
+                            message = statementsResponse.responseBody,
                             isError = true,
-                            errorType = creditScoreResponse.errorType,
+                            errorType = statementsResponse.errorType,
                             responseBody = null
                         )
                     }
@@ -364,4 +364,69 @@ internal class PericulumManager {
                 }
             }
         }
+
+    suspend fun startGetStatement(statementKey: String, accessToken: String): Response =
+        withContext(Dispatchers.IO) {
+            try {
+                if (accessToken.isEmpty()) {
+                    Response(
+                        message = "Invalid access token",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InvalidToken
+                    )
+                } else if (statementKey.isEmpty()) {
+                    Response(
+                        message = "Invalid Statement key",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InvalidToken
+                    )
+                }  else if (!Utils().isInternetConnected()) {
+                    Response(
+                        message = "There is no access to the internet.",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InternetConnectionError
+                    )
+                } else {
+                    val statementsResponse =
+                        StatementsRepository().getStatement(
+                            accessToken = accessToken,
+                            statementKey = statementKey,
+                        )
+                    if (!statementsResponse.isError) {
+                        Response(
+                            message = "Success",
+                            isError = false,
+                            responseBody = statementsResponse.responseBody
+                        )
+                    } else {
+                        Response(
+                            message = statementsResponse.responseBody,
+                            isError = true,
+                            errorType = statementsResponse.errorType,
+                            responseBody = null
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                if (!Utils().isInternetConnected()) {
+                    Response(
+                        message = "There is no access to the internet.",
+                        isError = true,
+                        errorType = ErrorType.InternetConnectionError,
+                        responseBody = null
+                    )
+                } else {
+                    Response(
+                        message = "Error Occurred",
+                        isError = true,
+                        errorType = ErrorType.UnknownError,
+                        responseBody = null
+                    )
+                }
+            }
+        }
+
 }
