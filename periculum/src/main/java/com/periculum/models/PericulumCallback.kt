@@ -1,8 +1,7 @@
 package com.periculum.models
 
-import com.periculum.internal.models.CreditScore
-import com.periculum.internal.models.StatementTransaction
-import com.periculum.internal.models.Statements
+import com.periculum.internal.models.*
+import com.periculum.internal.models.Affordability
 
 
 interface PericulumCallback {
@@ -36,6 +35,14 @@ interface GetStatementTransactionCallback {
 interface GetStatementCallback {
 
     fun onSuccess(response: Statements)
+
+    fun onError(message: String, errorType: ErrorType)
+}
+
+
+interface GetAffordabilityCallback {
+
+    fun onSuccess(response: Array<Affordability>)
 
     fun onError(message: String, errorType: ErrorType)
 }

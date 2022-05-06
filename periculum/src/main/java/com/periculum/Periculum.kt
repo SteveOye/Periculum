@@ -5,6 +5,7 @@ import com.periculum.internal.PericulumManager
 import kotlinx.coroutines.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.periculum.internal.models.Affordability
 import com.periculum.internal.models.CreditScore
 import com.periculum.internal.models.StatementTransaction
 import com.periculum.internal.models.Statements
@@ -147,5 +148,29 @@ object Periculum {
             }
         }
     }
+
+    fun getAffordability(statementKey: String,
+                                accessToken: String,
+                                periculumCallback: GetAffordabilityCallback
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val response = PericulumManager().startGetAffordability(
+                statementKey = statementKey,
+                accessToken = accessToken
+            )
+            if (response.isError) {
+                periculumCallback.onError(response.message, response.errorType)
+                coroutineContext.cancel()
+            } else {
+                val gson: Gson = GsonBuilder().create()
+                val affordability: Array<Affordability> = gson.fromJson(response.responseBody!!, Array<Affordability>::class.java)
+
+                periculumCallback.onSuccess(affordability)
+                coroutineContext.cancel()
+            }
+        }
+    }
+
+
 
 }
