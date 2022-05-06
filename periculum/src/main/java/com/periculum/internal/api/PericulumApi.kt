@@ -4,6 +4,9 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.periculum.internal.models.Affordability
 import com.periculum.internal.models.AnalyticsModel
+import com.periculum.internal.models.ClientData
+import com.periculum.internal.models.ClientIdentification
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -46,11 +49,15 @@ internal interface PericulumApi {
         @Path("statementKey") statementKey: String,
     ): Call<JsonObject>
 
-    @GET("/affordability/{statementKey}/")
+    @GET("/affordability/{statementKey}")
     fun getAffordability(
         @Header("Authorization") accessToken: String,
         @Path("statementKey") statementKey: String,
     ): Call<JsonArray>
 
-
+    @PATCH("/statements/identification")
+    fun patchClientIdentification(
+        @Header("Authorization") accessToken: String,
+        @Body clientData: ClientData
+    ): Call<ResponseBody>
 }

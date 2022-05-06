@@ -1,5 +1,6 @@
 package com.periculum.models
 
+import com.google.gson.JsonArray
 import com.periculum.internal.models.*
 import com.periculum.internal.models.Affordability
 
@@ -43,6 +44,13 @@ interface GetStatementCallback {
 interface GetAffordabilityCallback {
 
     fun onSuccess(response: Array<Affordability>)
+
+    fun onError(message: String, errorType: ErrorType)
+}
+
+interface PatchIdentificationCallback {
+
+    fun onSuccess(response: String)
 
     fun onError(message: String, errorType: ErrorType)
 }
