@@ -2,7 +2,7 @@ package com.periculum.internal.api
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.periculum.internal.models.AffordabilityModel
+import com.periculum.internal.models.Affordability
 import com.periculum.internal.models.AnalyticsModel
 import retrofit2.Call
 import retrofit2.http.*
@@ -19,7 +19,7 @@ internal interface PericulumApi {
     @POST("/affordability")
     fun postAffordabilityData(
         @Header("Authorization") token: String,
-        @Body affordabilityModel: AffordabilityModel
+        @Body affordability: Affordability
     ): Call<JsonObject>
 
     @POST("/creditscore/{statementKey}")
@@ -45,5 +45,12 @@ internal interface PericulumApi {
         @Header("Authorization") accessToken: String,
         @Path("statementKey") statementKey: String,
     ): Call<JsonObject>
+
+    @GET("/affordability/{statementKey}/")
+    fun getAffordability(
+        @Header("Authorization") accessToken: String,
+        @Path("statementKey") statementKey: String,
+    ): Call<JsonArray>
+
 
 }

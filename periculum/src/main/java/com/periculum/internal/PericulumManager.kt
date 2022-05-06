@@ -1,6 +1,6 @@
 package com.periculum.internal
 
-import com.periculum.internal.models.AffordabilityModel
+import com.periculum.internal.models.Affordability
 import com.periculum.internal.repository.*
 import com.periculum.internal.repository.AffordabilityRepository
 import com.periculum.internal.repository.AnalyticsRepository
@@ -123,7 +123,7 @@ internal class PericulumManager {
                 } else {
                     val affordabilityResponse =
                         AffordabilityRepository().postAffordabilityDataToServer(
-                            AffordabilityModel(
+                            Affordability(
                                 dti = dti,
                                 loanTenure = loanTenure,
                                 statementKey = statementKey,
@@ -406,6 +406,70 @@ internal class PericulumManager {
                             message = statementsResponse.responseBody,
                             isError = true,
                             errorType = statementsResponse.errorType,
+                            responseBody = null
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                if (!Utils().isInternetConnected()) {
+                    Response(
+                        message = "There is no access to the internet.",
+                        isError = true,
+                        errorType = ErrorType.InternetConnectionError,
+                        responseBody = null
+                    )
+                } else {
+                    Response(
+                        message = "Error Occurred",
+                        isError = true,
+                        errorType = ErrorType.UnknownError,
+                        responseBody = null
+                    )
+                }
+            }
+        }
+
+    suspend fun startGetAffordability(statementKey: String, accessToken: String): Response =
+        withContext(Dispatchers.IO) {
+            try {
+                if (accessToken.isEmpty()) {
+                    Response(
+                        message = "Invalid access token",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InvalidToken
+                    )
+                } else if (statementKey.isEmpty()) {
+                    Response(
+                        message = "Invalid Statement key",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InvalidToken
+                    )
+                }  else if (!Utils().isInternetConnected()) {
+                    Response(
+                        message = "There is no access to the internet.",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InternetConnectionError
+                    )
+                } else {
+                    val affordabilityResponse=
+                        AffordabilityRepository().getAffordability(
+                            accessToken = accessToken,
+                            statementKey = statementKey,
+                        )
+                    if (!affordabilityResponse.isError) {
+                        Response(
+                            message = "Success",
+                            isError = false,
+                            responseBody = affordabilityResponse.responseBody
+                        )
+                    } else {
+                        Response(
+                            message = affordabilityResponse.responseBody,
+                            isError = true,
+                            errorType = affordabilityResponse.errorType,
                             responseBody = null
                         )
                     }
