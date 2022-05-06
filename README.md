@@ -164,11 +164,11 @@ to handle error cases.
 These are the callback for every request made
 
 | action | method  | Callback                      | Description             |
-| :-------- | :-------- | :-------------------------------- |
+| :-------- | :-------- | :-------------------------------- | :--------------------|
 | Generate Credit Score    | `generateCreditScore`  |  `GenerateCreditScoreCallback`     |  Returns a Credit Score Object  |
 | Get Existing Credit Score      | `getCreditScore`  |  `GetCreditScoreCallback`   |  Return an Array of CreditScore object |
 | Get Statement Transaction   | `getStatementTransaction`  | `GetStatementTransactionCallback`  |  Returns an Array of StatementTransaction object |
-|  Get Existing Statement Analytics  | `getStatment`  |  `GetStatementCallback`  |   Returns a Statement object  |
+| Get Existing Statement Analytics  | `getStatment`  |  `GetStatementCallback`  |   Returns a Statement object  |
 | Get Existing Statement Affordability Analysis  | `getAffordability`  | `GetAffordabilityCallback` | Returns an Array of Affordability object |
 | Attach Customer Identification Information To A Statement  | `patchClientIdentification`  | `PatchIdentificationCallback`      | Returns a statusCode 200 on success|
 
@@ -346,7 +346,7 @@ class MainActivity : ComponentActivity() {
 
 **Generate Credit Score**
 
-```
+```kotlin
 
 class MainActivity : ComponentActivity() {
 
