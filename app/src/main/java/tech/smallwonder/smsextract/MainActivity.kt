@@ -57,7 +57,7 @@ fun MainView() {
         "Affordability",
     )
 
-    var key: String = "add token "
+    var key: String = "Enter Key"
 
     Column(Modifier.fillMaxWidth()) {
         TabRow(selectedTabIndex = tabIndex) {
