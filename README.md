@@ -399,8 +399,6 @@ class MainActivity : ComponentActivity() {
                     ) {
                         Text(text = "Generate Credit Score")
                     }
-
-
                 }
             }
         }
@@ -458,29 +456,28 @@ Periculum.getCreditScore(
 ```kotlin
 Periculum.getCreditScore(
 	statementKey = "125", //Statement Key
-        accessToken = key , // Token
-        periculumCallback = object : GetStatementTransactionCallback {
-        	override fun onSuccess(response: Array<StatementTransaction>) {
-                	Log.i(TAG, response[0].description.toString())
-            }
-            override fun onError(
-            	message: String,
-                    errorType: ErrorType
-            ) {
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-                when (errorType) { // handle response error
-                 	ErrorType.InternetConnectionError -> {
-                        	Log.e(TAG, "InternetConnectionError")
-                	}
-                     ErrorType.NetworkRequest -> {
-                     	Log.e(TAG, "NetworkRequest")
-                     }
-                     ErrorType.InvalidToken -> {
-                     	Log.e(TAG, "InvalidToken")
-                     }
-			...
-			}
-		}
+    accessToken = key , // Token
+    periculumCallback = object : GetStatementTransactionCallback {
+        override fun onSuccess(response: Array<StatementTransaction>) {
+            Log.i(TAG, response[0].description.toString())
+        }
+        override fun onError(
+            message: String,
+            errorType: ErrorType
+        ) {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            when (errorType) { // handle response error
+                ErrorType.InternetConnectionError -> {
+                    Log.e(TAG, "InternetConnectionError")
+                }
+                ErrorType.NetworkRequest -> {
+                    Log.e(TAG, "NetworkRequest")
+                }
+                ErrorType.InvalidToken -> {
+                    Log.e(TAG, "InvalidToken")
+                }...
+            } 
+        } 
     }
 )
 
@@ -532,7 +529,7 @@ Periculum.getStatement(
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `statementKey` | `String` | **required** |
-| `accessToken` | `String | **required** |
+| `accessToken` | `String` | **required** |
 | `periculumCallback` | `GetAfordabilityCallback` | **required** |
 
 
@@ -593,7 +590,7 @@ Periculum.getAfordability(
 
 val identificationData =
     ClientIdentification(
-        identifierName = "bvn",
+        identifierName = "bvn", 
         identifierValue ="2345"
     )
 val listOfItems =
