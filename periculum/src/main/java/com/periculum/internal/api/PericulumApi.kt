@@ -15,13 +15,13 @@ internal interface PericulumApi {
 
     @POST("/mobile/analytics")
     fun postAnalytics(
-        @Header("Authorization") token: String,
+        @Header("Authorization") accessToken: String,
         @Body analyticsBody: AnalyticsModel
     ): Call<JsonObject>
 
     @POST("/affordability")
     fun postAffordabilityData(
-        @Header("Authorization") token: String,
+        @Header("Authorization") accessToken: String,
         @Body affordability: Affordability
     ): Call<JsonObject>
 

@@ -68,7 +68,7 @@ Visit https://www.periculum.io/documentation/insights/#authenticationrequest for
 | :-------- | :------- | :------------------------- |
 | `phoneNumber` | `String` | **Optional**. customer phone number |
 | `bvn` | `String` | **Optional**. customer bvn |
-| `token` | `String` | **Required**. API access token generated from periculum api |
+| `accessToken` | `String` | **Required**. API access token generated from periculum api |
 | `periculumCallback`      | `Interface` | **Required**. Callback function to get request status |
 
 
@@ -76,7 +76,7 @@ Visit https://www.periculum.io/documentation/insights/#authenticationrequest for
 Periculum.analytics(
     phoneNumber = "+2348089182606", // customer phone number (Optional)
     bvn = "0000000111", // customer bvn (Optional)
-    token = "" // token generated from periculum api
+    accessToken = "" // token generated from periculum api
     object : PericulumCallback {
         override fun onSuccess(response: String) {
             Log.i("TAG", response)
@@ -109,7 +109,7 @@ Periculum.analytics(
 | `statementKey` | `Int` | **Required**. The key of the statement to generate the affordability analysis for |
 | `averageMonthlyTotalExpenses` | `Double` | **Optional**. Average Monthly Total Expenses |
 | `averageMonthlyLoanRepaymentAmount` | `Double` | **Optional**. Average Monthly Loan Repayment Amount	 |
-| `token` | `String` | **Required**. API access token generated from periculum api |
+| `accessToken` | `String` | **Required**. API access token generated from periculum api |
 | `periculumCallback`      | `interface` | **Required**. Callback function to get request status |
 
 
@@ -121,7 +121,7 @@ Periculum.affordability(
     statementKey = 932, // Pass a valid statement key
     averageMonthlyTotalExpenses = 0.0, // Average Monthly Total Expenses (Optional)
     averageMonthlyLoanRepaymentAmount = 0.0, // Average Monthly Loan Repayment Amount (Optional)
-    token = "", // token generated from periculum api
+    accessToken = "", // token generated from periculum api
     object : PericulumCallback {
         override fun onSuccess(response: String) {
             Log.i("TAG", response)
@@ -216,7 +216,7 @@ class MainActivity : ComponentActivity() {
                             Periculum.analytics(
                                 phoneNumber = "+2348089182606", // customer phone number (Optional)
                                 bvn = "0000000111", // customer bvn (Optional)
-                                token = "", // token generated from periculum api
+                                accessToken = "", // token generated from periculum api
                                 object : PericulumCallback {
                                     override fun onSuccess(response: String) {
                                         Log.i(TAG, response)
@@ -298,7 +298,7 @@ class MainActivity : ComponentActivity() {
                                 statementKey = 932, // Pass a valid statement key
                                 averageMonthlyTotalExpenses = 0.0, // Average Monthly Total Expenses (Optional)
                                 averageMonthlyLoanRepaymentAmount = 0.0, // Average Monthly Loan Repayment Amount (Optional)
-                                token = "", // token generated from periculum api
+                                accessToken = "", // token generated from periculum api
                                 object : PericulumCallback {
                                     override fun onSuccess(response: String) {
                                         Log.i(TAG, response)
@@ -351,7 +351,7 @@ class MainActivity : ComponentActivity() {
 | :-------- | :------- | :------------------------- |
 | `statementKey` | `String` | **required** |
 | `accessToken` | `String` | **required** |
-| `periculumCallback` | `GetCreditScoreCallback` | **required** |
+| `periculumCallback` | `GenerateCreditScoreCallback` | **required** |
 
 ```kotlin
 

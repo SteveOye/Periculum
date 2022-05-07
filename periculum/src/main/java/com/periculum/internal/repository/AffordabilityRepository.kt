@@ -8,7 +8,7 @@ import com.periculum.models.ErrorType
 
 internal class AffordabilityRepository {
 
-    internal suspend fun postAffordabilityDataToServer(affordability: Affordability, token: String): AffordabilityResponseModel {
+    internal suspend fun postAffordabilityDataToServer(affordability: Affordability, accessToken: String): AffordabilityResponseModel {
         return try {
             if (!Utils().isInternetConnected()) {
                 AffordabilityResponseModel(
@@ -18,7 +18,7 @@ internal class AffordabilityRepository {
                 )
             } else {
                 val response = RetrofitInstance.api.postAffordabilityData(
-                    token = "Bearer $token",
+                    accessToken = "Bearer $accessToken",
                     affordability = affordability
                 )
                 val data = response.execute()
