@@ -20,11 +20,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.periculum.Periculum
-import com.periculum.internal.models.Affordability
-import com.periculum.internal.models.CreditScore
-import com.periculum.internal.models.StatementTransaction
-import com.periculum.internal.models.Statements
+import com.periculum.internal.models.*
 import com.periculum.models.*
+import org.json.JSONArray
 import tech.smallwonder.smsextract.ui.theme.SmsExtractTheme
 
 const val TAG = "MainActivity"
@@ -60,6 +58,7 @@ fun MainView() {
     )
 
     var key: String = "Enter Key"
+
     Column(Modifier.fillMaxWidth()) {
         TabRow(selectedTabIndex = tabIndex) {
             tabData.forEachIndexed { index, text ->
@@ -571,6 +570,69 @@ fun MainView() {
                                             Log.i(TAG, response[1].createdDate.toString())
                                             state.value = false
                                             text.value = "Success --->\t\t ${response.size}"
+                                        }
+
+                                        override fun onError(
+                                            message: String,
+                                            errorType: ErrorType
+                                        ) {
+                                            text.value = "Error type ---> $errorType" // Error Type
+                                            text.value = "Error message ---> $message" // Error message
+                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
+                                                .show()
+                                            state.value = false
+
+                                            when (errorType) { // handle response error
+                                                ErrorType.InternetConnectionError -> {
+                                                    Log.e(TAG, "InternetConnectionError")
+                                                }
+                                                ErrorType.NetworkRequest -> {
+                                                    Log.e(TAG, "NetworkRequest")
+                                                }
+                                                ErrorType.InvalidToken -> {
+                                                    Log.e(TAG, "InvalidToken")
+                                                }
+                                                ErrorType.InvalidData -> {
+                                                    Log.e(TAG, "InvalidData")
+                                                }
+                                                ErrorType.UnknownError -> {
+                                                    Log.e(TAG, "UnknownError")
+                                                }
+                                            }
+                                        }
+                                    }
+                                )
+                            },
+                            modifier = Modifier.padding(20.dp)
+                        ) {
+                            Text(text = "start affordability")
+                        }
+                        Button(
+                            onClick = {
+                                val identificationData = ClientIdentification(
+                                    identifierName = "bvn",
+                                    identifierValue ="2345"
+                                )
+
+                                val identificationData2 = ClientIdentification(
+                                    identifierName = "nin",
+                                    identifierValue ="2345"
+                                )
+                                val listOfItems = mutableListOf<ClientIdentification>(identificationData, identificationData2)
+                                val clientData = ClientData(
+                                    statementKey = 125,
+                                    identificationData = listOfItems
+                                )
+
+                                Periculum.patchClientIdentification(
+                                    accessToken = key ,
+                                    clientData = clientData,
+                                    periculumCallback = object : PatchIdentificationCallback {
+
+                                        override fun onSuccess(response: String) {
+                                            Log.i(TAG, response.toString())
+                                            state.value = false
+                                            text.value = "Success --->\t\t ${response.toString()}"
                                         }
 
                                         override fun onError(

@@ -1,6 +1,7 @@
 package com.periculum.internal
 
 import com.periculum.internal.models.Affordability
+import com.periculum.internal.models.ClientData
 import com.periculum.internal.repository.*
 import com.periculum.internal.repository.AffordabilityRepository
 import com.periculum.internal.repository.AnalyticsRepository
@@ -470,6 +471,71 @@ internal class PericulumManager {
                             message = affordabilityResponse.responseBody,
                             isError = true,
                             errorType = affordabilityResponse.errorType,
+                            responseBody = null
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                if (!Utils().isInternetConnected()) {
+                    Response(
+                        message = "There is no access to the internet.",
+                        isError = true,
+                        errorType = ErrorType.InternetConnectionError,
+                        responseBody = null
+                    )
+                } else {
+                    Response(
+                        message = "Error Occurred",
+                        isError = true,
+                        errorType = ErrorType.UnknownError,
+                        responseBody = null
+                    )
+                }
+            }
+        }
+
+
+    suspend fun startPatchIdentification(accessToken: String, clientData: ClientData): Response =
+        withContext(Dispatchers.IO) {
+            try {
+                if (accessToken.isEmpty()) {
+                    Response(
+                        message = "Invalid access token",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InvalidToken
+                    )
+                } else if (clientData.statementKey.toString().isEmpty()) {
+                    Response(
+                        message = "Invalid Statement key",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InvalidToken
+                    )
+                }  else if (!Utils().isInternetConnected()) {
+                    Response(
+                        message = "There is no access to the internet.",
+                        responseBody = null,
+                        isError = true,
+                        errorType = ErrorType.InternetConnectionError
+                    )
+                } else {
+                    val identificationResponse=
+                        ClientIdentificationRepository().patchClientIdentification(
+                            accessToken = accessToken,
+                            clientData = clientData,
+                        )
+                    if (!identificationResponse.isError) {
+                        Response(
+                            message = "Success",
+                            isError = false,
+                            responseBody = identificationResponse.responseBody
+                        )
+                    } else {
+                        Response(
+                            message = identificationResponse.responseBody,
+                            isError = true,
+                            errorType = identificationResponse.errorType,
                             responseBody = null
                         )
                     }
