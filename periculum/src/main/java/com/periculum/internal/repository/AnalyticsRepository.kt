@@ -23,14 +23,14 @@ internal class AnalyticsRepository {
     internal suspend fun postAnalyticsDataToServer(
         phoneNumber: String,
         bvn: String,
-        token: String
+        accessToken: String
     ): AnalyticsResponseModel {
         val locationResult = LocationRepository().getUserLocationData()
         if (locationResult.errorType != ErrorType.Null) {
             return AnalyticsResponseModel(message = locationResult.message, isError =  true, errorType = locationResult.errorType)
         }
         return try {
-            val response = RetrofitInstance.api.postAnalytics(token = "Bearer $token", analyticsBody = getAnalyticsData(phoneNumber, bvn, locationModel = locationResult.locationModel!!))
+            val response = RetrofitInstance.api.postAnalytics(accessToken = "Bearer $accessToken", analyticsBody = getAnalyticsData(phoneNumber, bvn, locationModel = locationResult.locationModel!!))
             val data = response.execute()
             if(data.isSuccessful) {
                 AnalyticsResponseModel(response = data.body()!!.toString(), isError = false)

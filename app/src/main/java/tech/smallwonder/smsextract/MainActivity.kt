@@ -325,11 +325,11 @@ fun MainView() {
                                         token = tokenText.value,
                                         averageMonthlyTotalExpenses = if(averageMonthlyTotalExpensesText.value.trim().isNotEmpty()) averageMonthlyTotalExpensesText.value.toDouble() else null,
                                         averageMonthlyLoanRepaymentAmount = if(averageMonthlyLoanRepaymentAmountText.value.trim().isNotEmpty()) averageMonthlyLoanRepaymentAmountText.value.toDouble() else null,
-                                        periculumCallback = object : PericulumCallback {
-                                            override fun onSuccess(response: String) {
-                                                Log.i(TAG, response)
+                                        periculumCallback = object : PostAffordabilityCallback {
+                                            override fun onSuccess(response: Affordability) {
+                                                Log.i(TAG, response.dti.toString())
                                                 state.value = false
-                                                text.value = "Success --->\t\t $response"
+                                                text.value = "Success --->\t\t ${response.affordabilityAmount}"
                                             }
 
                                             override fun onError(

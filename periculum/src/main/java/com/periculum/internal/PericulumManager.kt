@@ -15,12 +15,12 @@ import kotlinx.coroutines.withContext
 
 internal class PericulumManager {
 
-    suspend fun startAnalytics(phoneNumber: String, bvn: String, token: String) =
+    suspend fun startAnalytics(phoneNumber: String, bvn: String, accessToken: String) =
         withContext(Dispatchers.IO) {
             try {
-                if (token.isEmpty()) {
+                if (accessToken.isEmpty()) {
                     Response(
-                        message = "Invalid access token",
+                        message = "Invalid access accessToken",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InvalidToken
@@ -55,7 +55,7 @@ internal class PericulumManager {
                     )
                 } else {
                     val analyticsResponse = AnalyticsRepository()
-                        .postAnalyticsDataToServer(phoneNumber, bvn, token = token)
+                        .postAnalyticsDataToServer(phoneNumber, bvn, accessToken = accessToken)
                     if (analyticsResponse.isError) {
                         Response(
                             message = analyticsResponse.message,
@@ -97,7 +97,7 @@ internal class PericulumManager {
             }
         }
 
-    suspend fun startAffordability(dti: Double, loanTenure: Int, statementKey: Int, averageMonthlyTotalExpenses: Double?, averageMonthlyLoanRepaymentAmount: Double?, token: String): Response =
+    suspend fun startAffordability(dti: Double, loanTenure: Int, statementKey: Int, averageMonthlyTotalExpenses: Double?, averageMonthlyLoanRepaymentAmount: Double?, accessToken: String): Response =
         withContext(Dispatchers.IO) {
             try {
                 if(dti < 0.0 || dti > 1) {
@@ -107,9 +107,9 @@ internal class PericulumManager {
                         isError = true,
                         errorType = ErrorType.InvalidData
                     )
-                }else if (token.isEmpty()) {
+                }else if (accessToken.isEmpty()) {
                     Response(
-                        message = "Invalid access token",
+                        message = "Invalid access accessToken",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InvalidToken
@@ -131,7 +131,7 @@ internal class PericulumManager {
                                 averageMonthlyLoanRepaymentAmount = averageMonthlyLoanRepaymentAmount,
                                 averageMonthlyTotalExpenses = averageMonthlyTotalExpenses
                             ),
-                            token = token
+                            accessToken = accessToken
                         )
                     if (!affordabilityResponse.isError) {
                         Response(
@@ -179,7 +179,7 @@ internal class PericulumManager {
             try {
                  if (accessToken.isEmpty()) {
                     Response(
-                        message = "Invalid access token",
+                        message = "Invalid access accessToken",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InvalidToken
@@ -243,7 +243,7 @@ internal class PericulumManager {
             try {
                 if (accessToken.isEmpty()) {
                     Response(
-                        message = "Invalid access token",
+                        message = "Invalid access accessToken",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InvalidToken
@@ -307,7 +307,7 @@ internal class PericulumManager {
             try {
                 if (accessToken.isEmpty()) {
                     Response(
-                        message = "Invalid access token",
+                        message = "Invalid access accessToken",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InvalidToken
@@ -371,7 +371,7 @@ internal class PericulumManager {
             try {
                 if (accessToken.isEmpty()) {
                     Response(
-                        message = "Invalid access token",
+                        message = "Invalid access accessToken",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InvalidToken
@@ -435,7 +435,7 @@ internal class PericulumManager {
             try {
                 if (accessToken.isEmpty()) {
                     Response(
-                        message = "Invalid access token",
+                        message = "Invalid access accessToken",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InvalidToken
@@ -500,7 +500,7 @@ internal class PericulumManager {
             try {
                 if (accessToken.isEmpty()) {
                     Response(
-                        message = "Invalid access token",
+                        message = "Invalid access accessToken",
                         responseBody = null,
                         isError = true,
                         errorType = ErrorType.InvalidToken

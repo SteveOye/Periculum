@@ -41,7 +41,7 @@ object Periculum {
         token: String,
         averageMonthlyLoanRepaymentAmount: Double? = null,
         averageMonthlyTotalExpenses: Double? = null,
-        periculumCallback: PericulumCallback
+        periculumCallback: PostAffordabilityCallback
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             val response = PericulumManager().startAffordability(dti = dti, loanTenure = loanTenure, statementKey = statementKey, averageMonthlyTotalExpenses = averageMonthlyTotalExpenses, averageMonthlyLoanRepaymentAmount = averageMonthlyLoanRepaymentAmount, token = token)
@@ -49,7 +49,10 @@ object Periculum {
                 periculumCallback.onError(response.message, response.errorType)
                 coroutineContext.cancel()
             } else {
-                periculumCallback.onSuccess(response.responseBody!!)
+
+                val gson: Gson = GsonBuilder().create()
+                val affordability: Affordability = gson.fromJson(response.responseBody!!, Affordability::class.java)
+                periculumCallback.onSuccess(affordability)
                 coroutineContext.cancel()
             }
         }

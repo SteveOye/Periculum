@@ -18,8 +18,8 @@ The library gives you credit score information for your customer. No stress :)
 - Compile Android SDK: Periculum requires you to compile against API 31 or later.
 ## Info
 
-For this plugin to work, you must have a Periculum account and you'll also 
-need to use your merchant Id and secret key to generate a token from the 
+For this plugin to work, you must have a Periculum account and you'll also
+need to use your merchant Id and secret key to generate a token from the
 Periculum API.
 
 
@@ -55,7 +55,7 @@ Your app must first identify and authorize itself against an authorization serve
 
 To authenticate against the authorization server, make sure you have Periculum's client id and client secret. Your app will not be able to receive an access token and call endpoints on the Insights API without these. If you have not received your client id or client secret, please contact Periculum's usual support channel (email support@periculum.io).
 
-Visit https://www.periculum.io/documentation/insights/#authenticationrequest for further information. 
+Visit https://www.periculum.io/documentation/insights/#authenticationrequest for further information.
 
 ![Authorization process](https://github.com/AshaluwalaKazeem/Periculum/blob/master/auth.png)
 
@@ -68,7 +68,7 @@ Visit https://www.periculum.io/documentation/insights/#authenticationrequest for
 | :-------- | :------- | :------------------------- |
 | `phoneNumber` | `String` | **Optional**. customer phone number |
 | `bvn` | `String` | **Optional**. customer bvn |
-| `token` | `String` | **Required**. API access token generated from periculum api |
+| `accessToken` | `String` | **Required**. API access token generated from periculum api |
 | `periculumCallback`      | `Interface` | **Required**. Callback function to get request status |
 
 
@@ -76,7 +76,7 @@ Visit https://www.periculum.io/documentation/insights/#authenticationrequest for
 Periculum.analytics(
     phoneNumber = "+2348089182606", // customer phone number (Optional)
     bvn = "0000000111", // customer bvn (Optional)
-    token = "" // token generated from periculum api
+    accessToken = "" // token generated from periculum api
     object : PericulumCallback {
         override fun onSuccess(response: String) {
             Log.i("TAG", response)
@@ -109,7 +109,7 @@ Periculum.analytics(
 | `statementKey` | `Int` | **Required**. The key of the statement to generate the affordability analysis for |
 | `averageMonthlyTotalExpenses` | `Double` | **Optional**. Average Monthly Total Expenses |
 | `averageMonthlyLoanRepaymentAmount` | `Double` | **Optional**. Average Monthly Loan Repayment Amount	 |
-| `token` | `String` | **Required**. API access token generated from periculum api |
+| `accessToken` | `String` | **Required**. API access token generated from periculum api |
 | `periculumCallback`      | `interface` | **Required**. Callback function to get request status |
 
 
@@ -121,7 +121,7 @@ Periculum.affordability(
     statementKey = 932, // Pass a valid statement key
     averageMonthlyTotalExpenses = 0.0, // Average Monthly Total Expenses (Optional)
     averageMonthlyLoanRepaymentAmount = 0.0, // Average Monthly Loan Repayment Amount (Optional)
-    token = "", // token generated from periculum api
+    accessToken = "", // token generated from periculum api
     object : PericulumCallback {
         override fun onSuccess(response: String) {
             Log.i("TAG", response)
@@ -145,7 +145,7 @@ Periculum.affordability(
 
 #### Error Types
 
-These are the error types that can be used in the onError callback 
+These are the error types that can be used in the onError callback
 to handle error cases.
 
 | Parameter | Error Description                       |
@@ -158,7 +158,6 @@ to handle error cases.
 | `NetworkRequest`      | While submitting the request, a network error occurred. |
 | `InvalidToken`      | Invalid access token |
 | `InvalidData`      | An invalid parameter has been passed. |
-
 
 
 ``` kotlin
@@ -174,10 +173,23 @@ enum class ErrorType {
 }
 ```
 
+#### Callback Types
+
+These are the callback for every request made
+
+| action | method  | Callback                      | Description             |
+| :-------- | :-------- | :-------------------------------- | :--------------------|
+| Generate Credit Score    | `generateCreditScore`  |  `GenerateCreditScoreCallback`     |  Returns a Credit Score Object  |
+| Get Existing Credit Score      | `getCreditScore`  |  `GetCreditScoreCallback`   |  Return an Array of CreditScore object |
+| Get Statement Transaction   | `getStatementTransaction`  | `GetStatementTransactionCallback`  |  Returns an Array of StatementTransaction object |
+| Get Existing Statement Analytics  | `getStatment`  |  `GetStatementCallback`  |   Returns a Statement object  |
+| Get Existing Statement Affordability Analysis  | `getAffordability`  | `GetAffordabilityCallback` | Returns an Array of Affordability object |
+| Attach Customer Identification Information To A Statement  | `patchClientIdentification`  | `PatchIdentificationCallback`      | Returns a statusCode 200 on success|
+
 
 ## How do I use Periculum?
 
-See 
+See
 [source code](https://github.com/AshaluwalaKazeem/Periculum/blob/master/app/src/main/java/tech/smallwonder/smsextract/MainActivity.kt) for full implementation.
 
 Simple use cases will look something like this:
@@ -204,7 +216,7 @@ class MainActivity : ComponentActivity() {
                             Periculum.analytics(
                                 phoneNumber = "+2348089182606", // customer phone number (Optional)
                                 bvn = "0000000111", // customer bvn (Optional)
-                                token = "", // token generated from periculum api
+                                accessToken = "", // token generated from periculum api
                                 object : PericulumCallback {
                                     override fun onSuccess(response: String) {
                                         Log.i(TAG, response)
@@ -286,7 +298,7 @@ class MainActivity : ComponentActivity() {
                                 statementKey = 932, // Pass a valid statement key
                                 averageMonthlyTotalExpenses = 0.0, // Average Monthly Total Expenses (Optional)
                                 averageMonthlyLoanRepaymentAmount = 0.0, // Average Monthly Loan Repayment Amount (Optional)
-                                token = "", // token generated from periculum api
+                                accessToken = "", // token generated from periculum api
                                 object : PericulumCallback {
                                     override fun onSuccess(response: String) {
                                         Log.i(TAG, response)
@@ -331,6 +343,293 @@ class MainActivity : ComponentActivity() {
     }
 }
 ```
+
+**Generate Credit Score**
+
+###### 
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `statementKey` | `String` | **required** |
+| `accessToken` | `String` | **required** |
+| `periculumCallback` | `GenerateCreditScoreCallback` | **required** |
+
+```kotlin
+
+class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            SmsExtractTheme {
+                Surface(color = MaterialTheme.colors.background) {
+
+                    Button(
+                        onClick = {
+                            Periculum.generateCreditScore(
+                                statementKey = "932", // Pass a valid statement key
+                                accessToken = "", // token generated from periculum api
+                                object : GenerateCreditScoreCallback { //Callback response returns a CreditScore Model
+                                    override fun onSuccess(response: CreditScore) {
+                                        Log.i(TAG, response)
+                                    }
+
+                                    override fun onError(
+                                        message: String,
+                                        errorType: ErrorType
+                                    ) {
+                                        Log.i(TAG, "Error type ---> $errorType") // Error Type
+                                        Log.i(TAG, "Error message ---> $message") // Error message
+
+                                        when (errorType) { // handle response error
+                                            ErrorType.InternetConnectionError -> {
+                                                Log.e(TAG, "InternetConnectionError")
+                                            }
+                                            ErrorType.NetworkRequest -> {
+                                                Log.e(TAG, "NetworkRequest")
+                                            }
+                                            ErrorType.InvalidToken -> {
+                                                Log.e(TAG, "InvalidToken")
+                                            }
+                                            ...
+                                        }
+                                    }
+                                }
+                            )
+                        },
+                    ) {
+                        Text(text = "Generate Credit Score")
+                    }
+                }
+            }
+        }
+    }
+}
+
+```
+
+**Get Existing Credit Score**
+###### 
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `statementKey` | `String` | **required** |
+| `accessToken` | `String` | **required** |
+| `periculumCallback` | `GetCreditScoreCallback` | **required** |
+
+```kotlin
+Periculum.getCreditScore(
+	statementKey = "125", //Statement Key
+    accessToken = key , // Token
+    periculumCallback = object : GetCreditScoreCallback {
+        override fun onSuccess(response: Array<CreditScore>) {
+            Log.i(TAG, response[0].baseScore.toString())
+        }
+        override fun onError(
+        	message: String,
+                errorType: ErrorType
+        ) {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            when (errorType) { // handle response error
+             	ErrorType.InternetConnectionError -> {
+                    	Log.e(TAG, "InternetConnectionError")
+            	}
+                ErrorType.NetworkRequest -> {
+                	Log.e(TAG, "NetworkRequest")
+                }
+                ErrorType.InvalidToken -> {
+                	Log.e(TAG, "InvalidToken")
+                }...
+            }
+		}
+	}
+)
+```
+
+
+**Get Statement Transaction**
+###### 
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `statementKey` | `String` | **required** |
+| `accessToken` | `String` | **required** |
+| `periculumCallback` | `GetStatementTransactionCallback` | **required** |
+
+```kotlin
+Periculum.getCreditScore(
+	statementKey = "125", //Statement Key
+    accessToken = key , // Token
+    periculumCallback = object : GetStatementTransactionCallback {
+        override fun onSuccess(response: Array<StatementTransaction>) {
+            Log.i(TAG, response[0].description.toString())
+        }
+        override fun onError(
+            message: String,
+            errorType: ErrorType
+        ) {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            when (errorType) { // handle response error
+                ErrorType.InternetConnectionError -> {
+                    Log.e(TAG, "InternetConnectionError")
+                }
+                ErrorType.NetworkRequest -> {
+                    Log.e(TAG, "NetworkRequest")
+                }
+                ErrorType.InvalidToken -> {
+                    Log.e(TAG, "InvalidToken")
+                }...
+            } 
+        } 
+    }
+)
+
+```
+
+**Get Existing Statement Analytics**
+###### 
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `statementKey` | `String` | **required** |
+| `accessToken` | `String` | **required** |
+| `periculumCallback` | `GetStatementCallback` | **required** |
+
+```kotlin
+Periculum.getStatement(
+	statementKey = "125", //Statement Key
+    accessToken = key , // Token
+    periculumCallback = object : GetStatementCallback {
+    	override fun onSuccess(response: Statements) {
+            	Log.i(TAG, response[0].description.toString())
+        }
+        
+        override fun onError(
+        	message: String,
+                errorType: ErrorType
+        ) {
+            text.value = "Error type ---> $errorType" // Error Type
+            text.value = "Error message ---> $message" // Error message
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+             when (errorType) { // handle response error
+             	ErrorType.InternetConnectionError -> {
+                    	Log.e(TAG, "InternetConnectionError")
+            	}
+                ErrorType.NetworkRequest -> {
+                	Log.e(TAG, "NetworkRequest")
+                }
+                ErrorType.InvalidToken -> {
+                	Log.e(TAG, "InvalidToken")
+                } ...
+            }
+        }
+	}
+)
+```
+
+**Get Existing Statement Affordability Analysis**
+
+###### 
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `statementKey` | `String` | **required** |
+| `accessToken` | `String` | **required** |
+| `periculumCallback` | `GetAfordabilityCallback` | **required** |
+
+
+```kotlin
+
+Periculum.getAfordability(
+	statementKey = "125", //Statement Key
+    accessToken = key , // Token
+    periculumCallback = object : GetAffordabilityCallback {
+    	override fun onSuccess(response: Array<Affordability>) {
+            	Log.i(TAG, response[0].createdDate.toString())
+        }
+
+        override fun onError(
+        	message: String,
+                errorType: ErrorType
+        ) {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            when (errorType) { // handle response error
+                ErrorType.InternetConnectionError -> {
+                    	Log.e(TAG, "InternetConnectionError")
+                }
+                ErrorType.NetworkRequest -> {
+                	Log.e(TAG, "NetworkRequest")
+                }
+                ErrorType.InvalidToken -> {
+                	Log.e(TAG, "InvalidToken")
+                }
+		        ...
+            }
+    	}
+    }
+)
+```
+
+
+#### Customer Identification Parameters
+
+###### ClientData
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `statementKey` | `String` | **required**. |
+| `identificationData` | `List<ClientIdentification>` | **required**. A list of different identification means |
+| `periculumCallback` | `PatchIdentificationCallback` | **required** |
+
+###### ClientIdentification
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `identifierName` | `String` | **required** Identification type name e.g: bvn or nin. |
+| `identifierValue` | `String` | **required**. Identification value/code.|
+
+
+**Attach Customer Identification Information To A Statement**
+
+```kotlin
+
+//Pass in a ClientData containing the key and a list of ClientIdentification
+
+val identificationData =
+    ClientIdentification(
+        identifierName = "bvn", 
+        identifierValue ="2345"
+    )
+val listOfItems =
+    mutableListOf<ClientIdentification>(identificationData)
+
+val clientData = ClientData(
+    statementKey = 125,
+    identificationData = listOfItems
+)
+
+Periculum.patchClientIdentification(
+    accessToken = key , // Token
+    clientData = clientData, //body ClientData
+    periculumCallback = object : PatchIdentificationCallback {
+        override fun onSuccess(response: String) {
+            Log.i(TAG, response)
+        }
+        override fun onError(
+            message: String,
+            errorType: ErrorType
+        ) {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            when (errorType) { // handle response error
+                ErrorType.InternetConnectionError -> {
+                    Log.e(TAG, "InternetConnectionError")
+                }
+                ErrorType.NetworkRequest -> {
+                    Log.e(TAG, "NetworkRequest")
+                }
+                ErrorType.InvalidToken -> {
+                    Log.e(TAG, "InvalidToken")
+                }...
+            }
+        }
+
+    }
+)
+```
+
 ## Required Permission
 
 The permissions that must be granted in order for this library to function are listed below.
