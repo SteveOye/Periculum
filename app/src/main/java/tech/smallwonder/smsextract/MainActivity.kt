@@ -56,7 +56,7 @@ fun MainView() {
         "Affordability",
     )
 
-    var key: String = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoibnVjbGV1c2lzIiwiaXNzIjoiaHR0cHM6Ly9wZXJpY3VsdW0tdGVjaG5vbG9naWVzLWluYy5hdXRoMC5jb20vIiwic3ViIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnJAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vYXBpLmluc2lnaHRzLXBlcmljdWx1bS5jb20iLCJpYXQiOjE2NTE2MDY1NzUsImV4cCI6MTY1MjIxMTM3NSwiYXpwIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnIiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.TrkvsuMM4cMqBuPalIhvRc81GJxl1ssE2JzUr1GpaaviQT43yi73sdUYhv2H9dYw6XsTTO0tt2yheH6NtiJcOQSrwwPM_fA292h9z_QKLk_QCduWDQM2NhC-C25AXjL7E6fcHVgd6IvGQFaf0y7CMpWjhKTa32VJ1ITyfPtNgjm60u-j_WeEkDmZngCwHHXrCV8iskKfKJRfZL-Ft7QBhXn2OY6t6XWj6QR1vaEZc7nU6SWYD03DHw11taEvy6Z0Y61_2MKaozUtJVCIUcZK16le-CMQUbkKpSY_SYszXXAsPwcdWhOcFFuTsnHVtCN-0KP7-FAUCr8o3l9qZcWK4w"
+    var key: String = "Enter key"
 
     Column(Modifier.fillMaxWidth()) {
         TabRow(selectedTabIndex = tabIndex) {
