@@ -451,7 +451,7 @@ Periculum.getCreditScore(
                 }
                 ErrorType.InvalidToken -> {
                 	Log.e(TAG, "InvalidToken")
-                }...
+                }..
             }
 		}
 	}
