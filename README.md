@@ -61,7 +61,7 @@ Visit https://www.periculum.io/documentation/insights/#authenticationrequest for
 
 1. Customer phone app authenticates with customer backend server.
 2. Customer backend server should return a valid access token. 
-...a. If the customer backend server has not obtained an access token, then it should make a call with the customer's client credentials to the authorization server and obtain an access token. 
+...2a. If the customer backend server has not obtained an access token, then it should make a call with the customer's client credentials to the authorization server and obtain an access token. 
 ...2ai. The customer backend server should cache the access token. 
 ...2b. If the customer backend server has an existing cached access token that has not expired, then it should return the cached token. 
 ...2bi. If the customer access token is near expiry (5-15 minutes before expiry), then it should obtain a new access token with its client credentials.
