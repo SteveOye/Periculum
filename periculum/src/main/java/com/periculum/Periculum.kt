@@ -14,17 +14,16 @@ object Periculum {
     fun analytics(
         phoneNumber: String,
         bvn: String,
-        token: String,
+        accessToken: String,
         periculumCallback: PericulumCallback
     ) {
         runBlocking {
-
         }
         GlobalScope.launch(Dispatchers.Main) {
             val response: Response = PericulumManager().startAnalytics(
                 phoneNumber = phoneNumber,
                 bvn = bvn,
-                token = token
+                accessToken = accessToken
             )
             if (response.isError) {
                 periculumCallback.onError(response.message, response.errorType)
@@ -38,13 +37,13 @@ object Periculum {
 
     fun affordability(
         dti: Double, loanTenure: Int, statementKey: Int,
-        token: String,
+        accessToken: String,
         averageMonthlyLoanRepaymentAmount: Double? = null,
         averageMonthlyTotalExpenses: Double? = null,
         periculumCallback: PostAffordabilityCallback
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            val response = PericulumManager().startAffordability(dti = dti, loanTenure = loanTenure, statementKey = statementKey, averageMonthlyTotalExpenses = averageMonthlyTotalExpenses, averageMonthlyLoanRepaymentAmount = averageMonthlyLoanRepaymentAmount, token = token)
+            val response = PericulumManager().startAffordability(dti = dti, loanTenure = loanTenure, statementKey = statementKey, averageMonthlyTotalExpenses = averageMonthlyTotalExpenses, averageMonthlyLoanRepaymentAmount = averageMonthlyLoanRepaymentAmount, accessToken = accessToken)
             if (response.isError) {
                 periculumCallback.onError(response.message, response.errorType)
                 coroutineContext.cancel()

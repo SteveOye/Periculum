@@ -1,6 +1,5 @@
 package com.periculum.models
 
-import com.google.gson.JsonArray
 import com.periculum.internal.models.*
 import com.periculum.internal.models.Affordability
 

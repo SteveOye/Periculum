@@ -17,7 +17,7 @@ internal interface PericulumApi {
     fun postAnalytics(
         @Header("Authorization") accessToken: String,
         @Body analyticsBody: AnalyticsModel
-    ): Call<JsonObject>
+    ): Call<JsonArray>
 
     @POST("/affordability")
     fun postAffordabilityData(
