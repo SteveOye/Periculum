@@ -1,5 +1,6 @@
 package com.periculum.internal
 
+import android.util.Log
 import com.periculum.internal.models.Affordability
 import com.periculum.internal.models.ClientData
 import com.periculum.internal.repository.*
@@ -57,6 +58,7 @@ internal class PericulumManager {
                     val analyticsResponse = AnalyticsRepository()
                         .postAnalyticsDataToServer(phoneNumber, bvn, accessToken = accessToken)
                     if (analyticsResponse.isError) {
+                        Log.d(TAG, "startAnalytics: ${analyticsResponse.message}")
                         Response(
                             message = analyticsResponse.message,
                             isError = true,
@@ -72,6 +74,7 @@ internal class PericulumManager {
                     }
                 }
             } catch (e: Exception) {
+                Log.d("TAG", "startAnalytics:  ${e.message}")
                 if (!Utils().isInternetConnected()) {
                     Response(
                         message = "There is no access to the internet.",

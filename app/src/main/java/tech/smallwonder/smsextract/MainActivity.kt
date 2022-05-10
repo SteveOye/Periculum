@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.periculum.Periculum
 import com.periculum.internal.models.*
 import com.periculum.models.*
-import org.json.JSONArray
 import tech.smallwonder.smsextract.ui.theme.SmsExtractTheme
 
 const val TAG = "MainActivity"
@@ -57,7 +56,7 @@ fun MainView() {
         "Affordability",
     )
 
-    var key: String = "Enter Key"
+    var key: String = "Enter key"
 
     Column(Modifier.fillMaxWidth()) {
         TabRow(selectedTabIndex = tabIndex) {
@@ -142,7 +141,7 @@ fun MainView() {
                                 Periculum.analytics(
                                     phoneNumber = phoneNumberText.value,
                                     bvn = bvnText.value,
-                                    token = tokenText.value,
+                                    accessToken = tokenText.value,
                                     object : PericulumCallback {
                                         override fun onSuccess(response: String) {
                                             Log.i(TAG, response)
@@ -322,7 +321,7 @@ fun MainView() {
                                         dti = dtiText.value.toDouble(),
                                         loanTenure = loanTenureText.value.toInt(),
                                         statementKey = statementKeyText.value.toInt(),
-                                        token = tokenText.value,
+                                        accessToken = tokenText.value,
                                         averageMonthlyTotalExpenses = if(averageMonthlyTotalExpensesText.value.trim().isNotEmpty()) averageMonthlyTotalExpensesText.value.toDouble() else null,
                                         averageMonthlyLoanRepaymentAmount = if(averageMonthlyLoanRepaymentAmountText.value.trim().isNotEmpty()) averageMonthlyLoanRepaymentAmountText.value.toDouble() else null,
                                         periculumCallback = object : PostAffordabilityCallback {

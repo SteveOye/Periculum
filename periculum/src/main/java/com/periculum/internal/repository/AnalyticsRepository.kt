@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.BatteryManager
 import android.os.Build
 import android.telephony.TelephonyManager
+import android.util.Log
 import com.periculum.internal.api.RetrofitInstance
 import com.periculum.internal.models.*
 import com.periculum.internal.utils.PericulumDependency
@@ -32,12 +33,14 @@ internal class AnalyticsRepository {
         return try {
             val response = RetrofitInstance.api.postAnalytics(accessToken = "Bearer $accessToken", analyticsBody = getAnalyticsData(phoneNumber, bvn, locationModel = locationResult.locationModel!!))
             val data = response.execute()
+            Log.d(TAG, "${data.code()}")
             if(data.isSuccessful) {
                 AnalyticsResponseModel(response = data.body()!!.toString(), isError = false)
             }else {
                 if(data.code() == 401) {
                     AnalyticsResponseModel(message = "Invalid Token. Unauthorized", isError = true, errorType = ErrorType.InvalidToken)
                 }else {
+                    Log.d("Error", "Error message -> ${data.message()}")
                     AnalyticsResponseModel(message = data.message(), isError = true, errorType = ErrorType.NetworkRequest)
                 }
             }
@@ -118,6 +121,8 @@ internal class AnalyticsRepository {
         val batteryManager = PericulumDependency.getApplicationContext()
             .getSystemService(BATTERY_SERVICE) as BatteryManager
         val batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+        //TODO:
+        println(Build.MODEL)
         return DeviceModel(
             device = Build.DEVICE,
             deviceId = Build.ID,
