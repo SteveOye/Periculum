@@ -3,11 +3,11 @@ package com.periculum
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
-import org.junit.Test
 import org.junit.runner.RunWith
 
 import org.junit.Assert.*
-import org.junit.Before
+import org.junit.BeforeClass
+import org.junit.Test
 import org.robolectric.RobolectricTestRunner
 
 /**
@@ -15,9 +15,9 @@ import org.robolectric.RobolectricTestRunner
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
-    @Before
+    @Test
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext

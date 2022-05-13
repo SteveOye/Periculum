@@ -32,7 +32,7 @@ internal data class SmsDataModel(
     @SerializedName("error_code")
     val errorCode: Int,
     @SerializedName("creator")
-    val creator: String,
+    val creator: String?,
     @SerializedName("seen")
     val seen: Int
 )

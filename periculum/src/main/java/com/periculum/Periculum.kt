@@ -15,7 +15,7 @@ object Periculum {
         phoneNumber: String,
         bvn: String,
         accessToken: String,
-        periculumCallback: PericulumCallback
+        periculumCallback: MobileAnalysisCallBack
     ) {
         runBlocking {
         }
@@ -29,7 +29,9 @@ object Periculum {
                 periculumCallback.onError(response.message, response.errorType)
                 coroutineContext.cancel()
             } else {
-                periculumCallback.onSuccess(response.responseBody!!)
+                val gson: Gson = GsonBuilder().create()
+                val mobileAnalysis: Array<MobileAnalysis> = gson.fromJson(response.responseBody!!, Array<MobileAnalysis>::class.java)
+                periculumCallback.onSuccess(mobileAnalysis)
                 coroutineContext.cancel()
             }
         }

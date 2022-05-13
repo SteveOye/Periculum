@@ -56,8 +56,7 @@ fun MainView() {
         "Affordability",
     )
 
-    var key: String = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1VSkJOVUk0UkRFek9FVTBORGd4UWpVMVJqTTJPVEJEUXpRMFF6bEJRa1F6UWpnd1JETkVSQSJ9.eyJodHRwczovL2luc2lnaHRzLXBlcmljdWx1bS5jb20vdGVuYW50IjoibnVjbGV1c2lzIiwiaXNzIjoiaHR0cHM6Ly9wZXJpY3VsdW0tdGVjaG5vbG9naWVzLWluYy5hdXRoMC5jb20vIiwic3ViIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnJAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vYXBpLmluc2lnaHRzLXBlcmljdWx1bS5jb20iLCJpYXQiOjE2NTE2MDY1NzUsImV4cCI6MTY1MjIxMTM3NSwiYXpwIjoiSDR1VHJzdjJoMGlEVGlTMDR2NmVGWmNpdTNLMGJvWnIiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.TrkvsuMM4cMqBuPalIhvRc81GJxl1ssE2JzUr1GpaaviQT43yi73sdUYhv2H9dYw6XsTTO0tt2yheH6NtiJcOQSrwwPM_fA292h9z_QKLk_QCduWDQM2NhC-C25AXjL7E6fcHVgd6IvGQFaf0y7CMpWjhKTa32VJ1ITyfPtNgjm60u-j_WeEkDmZngCwHHXrCV8iskKfKJRfZL-Ft7QBhXn2OY6t6XWj6QR1vaEZc7nU6SWYD03DHw11taEvy6Z0Y61_2MKaozUtJVCIUcZK16le-CMQUbkKpSY_SYszXXAsPwcdWhOcFFuTsnHVtCN-0KP7-FAUCr8o3l9qZcWK4w"
-
+    var key = "Enter access token"
     Column(Modifier.fillMaxWidth()) {
         TabRow(selectedTabIndex = tabIndex) {
             tabData.forEachIndexed { index, text ->
@@ -142,11 +141,9 @@ fun MainView() {
                                     phoneNumber = phoneNumberText.value,
                                     bvn = bvnText.value,
                                     accessToken = tokenText.value,
-                                    object : PericulumCallback {
-                                        override fun onSuccess(response: String) {
-                                            Log.i(TAG, response)
-                                            state.value = false
-                                            text.value = "Success --->\t\t$response"
+                                    object : MobileAnalysisCallBack {
+                                        override fun onSuccess(response: Array<MobileAnalysis>) {
+                                            Log.i(TAG, response[0].key.toString())
                                         }
 
                                         override fun onError(
@@ -418,6 +415,54 @@ fun MainView() {
                         Button(
                             onClick = {
 
+                                Periculum.generateCreditScore(
+                                    statementKey = "125",
+                                    accessToken = key ,
+                                    periculumCallback = object : GenerateCreditScoreCallback {
+                                        override fun onSuccess(response: CreditScore) {
+                                            Log.i(TAG, response.baseScore.toString())
+                                            state.value = false
+                                            text.value = "Success --->\t\t ${response}"
+                                        }
+
+                                        override fun onError(
+                                            message: String,
+                                            errorType: ErrorType
+                                        ) {
+                                            text.value = "Error type ---> $errorType" // Error Type
+                                            text.value = "Error message ---> $message" // Error message
+                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
+                                                .show()
+                                            state.value = false
+
+                                            when (errorType) { // handle response error
+                                                ErrorType.InternetConnectionError -> {
+                                                    Log.e(TAG, "InternetConnectionError")
+                                                }
+                                                ErrorType.NetworkRequest -> {
+                                                    Log.e(TAG, "NetworkRequest")
+                                                }
+                                                ErrorType.InvalidToken -> {
+                                                    Log.e(TAG, "InvalidToken")
+                                                }
+                                                ErrorType.InvalidData -> {
+                                                    Log.e(TAG, "InvalidData")
+                                                }
+                                                ErrorType.UnknownError -> {
+                                                    Log.e(TAG, "UnknownError")
+                                                }
+                                            }
+                                        }
+                                    }
+                                )
+                            },
+                            modifier = Modifier.padding(20.dp)
+                        ) {
+                            Text(text = "start generate credit score score")
+                        }
+                        Button(
+                            onClick = {
+
                                 Periculum.getCreditScore(
                                     statementKey = "125",
                                     accessToken = key ,
@@ -608,30 +653,15 @@ fun MainView() {
                         }
                         Button(
                             onClick = {
-                                val identificationData = ClientIdentification(
-                                    identifierName = "bvn",
-                                    identifierValue ="2345"
-                                )
 
-                                val identificationData2 = ClientIdentification(
-                                    identifierName = "nin",
-                                    identifierValue ="2345"
-                                )
-                                val listOfItems = mutableListOf<ClientIdentification>(identificationData, identificationData2)
-                                val clientData = ClientData(
-                                    statementKey = 125,
-                                    identificationData = listOfItems
-                                )
-
-                                Periculum.patchClientIdentification(
+                                Periculum.analytics(
+                                    phoneNumber = "09012234567",
+                                    bvn = "349966",
                                     accessToken = key ,
-                                    clientData = clientData,
-                                    periculumCallback = object : PatchIdentificationCallback {
+                                    periculumCallback = object : MobileAnalysisCallBack {
 
-                                        override fun onSuccess(response: String) {
-                                            Log.i(TAG, response.toString())
-                                            state.value = false
-                                            text.value = "Success --->\t\t ${response.toString()}"
+                                        override fun onSuccess(response: Array<MobileAnalysis>) {
+                                            text.value = "Success --->\t\t ${response[0]}"
                                         }
 
                                         override fun onError(
@@ -667,7 +697,7 @@ fun MainView() {
                             },
                             modifier = Modifier.padding(20.dp)
                         ) {
-                            Text(text = "start affordability")
+                            Text(text = "Generate Mobile Analysis")
                         }
                         Text(text = text.value.replace("\\n", "\n"))
                     }
