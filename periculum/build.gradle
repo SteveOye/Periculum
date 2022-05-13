@@ -59,9 +59,9 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
 
-                groupId = 'com.github.ashaluwalakazeem'
+                groupId = 'com.github.periculum'
                 artifactId = 'periculum'
-                version '1.0.0-alpha01'
+                version '1.0.1'
             }
         }
     }
