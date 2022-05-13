@@ -75,87 +75,18 @@ Visit https://www.periculum.io/documentation/insights/#authenticationrequest for
 
 ## API Reference
 
-#### Anaalytics Parameters
+#### Permission Required
 
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `phoneNumber` | `String` | **Optional**. customer phone number |
-| `bvn` | `String` | **Optional**. customer bvn |
-| `accessToken` | `String` | **Required**. API access token generated from periculum api |
-| `periculumCallback`      | `Interface` | **Required**. Callback function to get request status |
-
-
-``` kotlin
-Periculum.analytics(
-    phoneNumber = "+2348089182606", // customer phone number (Optional)
-    bvn = "0000000111", // customer bvn (Optional)
-    accessToken = "" // token generated from periculum api
-    object : PericulumCallback {
-        override fun onSuccess(response: String) {
-            Log.i("TAG", response)
-        }
-
-        override fun onError(
-            message: String,
-            errorType: ErrorType
-        ) {
-            Log.e("TAG", "Error message ---> $message")
-            when (errorType) { // handle response error
-                ErrorType.SmsPermissionError -> {
-                    Log.e("TAG", "SmsPermissionError")
-                }
-                ...
-            }
-        }
-    }
-)
+```xml
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 ```
 
-
-#### Affordability Parameters
-
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `dti` | `Double` | **Required**. Debt to income ratio for the affordability analysis. |
-| `loanTenure` | `Int` | **Required**. The period of the loan in months. |
-| `statementKey` | `Int` | **Required**. The key of the statement to generate the affordability analysis for |
-| `averageMonthlyTotalExpenses` | `Double` | **Optional**. Average Monthly Total Expenses |
-| `averageMonthlyLoanRepaymentAmount` | `Double` | **Optional**. Average Monthly Loan Repayment Amount	 |
-| `accessToken` | `String` | **Required**. API access token generated from periculum api |
-| `periculumCallback`      | `interface` | **Required**. Callback function to get request status |
-
-
-
-``` kotlin
-Periculum.affordability(
-    dti = 0.1, // DTI
-    loanTenure = 32, // Loan Tenure
-    statementKey = 932, // Pass a valid statement key
-    averageMonthlyTotalExpenses = 0.0, // Average Monthly Total Expenses (Optional)
-    averageMonthlyLoanRepaymentAmount = 0.0, // Average Monthly Loan Repayment Amount (Optional)
-    accessToken = "", // token generated from periculum api
-    object : PericulumCallback {
-        override fun onSuccess(response: String) {
-            Log.i("TAG", response)
-        }
-
-        override fun onError(
-            message: String,
-            errorType: ErrorType
-        ) {
-            Log.e("TAG", "Error message ---> $message")
-            when (errorType) { // handle response error
-                ErrorType.InternetConnectionError -> {
-                    Log.e("TAG", "InternetConnectionError")
-                }
-                ...
-            }
-        }
-    }
-)
-```
 
 #### Error Types
 
@@ -193,8 +124,10 @@ These are the callback for every request made
 
 | action | method  | Callback                      | Description             |
 | :-------- | :-------- | :-------------------------------- | :--------------------|
+| Get Mobile Analysis    | `analytics`  |  `MobileAnalysisCallBack`     |  Returns an Array of MobileAnalysis Object  |
+| Generate Affordability Statement      | `affordability`  |  `PostAffordabilityCallback`   |  Returns an Affordability object |
 | Generate Credit Score    | `generateCreditScore`  |  `GenerateCreditScoreCallback`     |  Returns a Credit Score Object  |
-| Get Existing Credit Score      | `getCreditScore`  |  `GetCreditScoreCallback`   |  Return an Array of CreditScore object |
+| Get Existing Credit Score      | `getCreditScore`  |  `GetCreditScoreCallback`   |  Returns an Array of CreditScore object |
 | Get Statement Transaction   | `getStatementTransaction`  | `GetStatementTransactionCallback`  |  Returns an Array of StatementTransaction object |
 | Get Existing Statement Analytics  | `getStatment`  |  `GetStatementCallback`  |   Returns a Statement object  |
 | Get Existing Statement Affordability Analysis  | `getAffordability`  | `GetAffordabilityCallback` | Returns an Array of Affordability object |
@@ -208,154 +141,88 @@ See
 
 Simple use cases will look something like this:
 
-**For Analytics:**
+#### Anaalytics Parameters
+
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `phoneNumber` | `String` | **Optional**. customer phone number |
+| `bvn` | `String` | **Optional**. customer bvn |
+| `accessToken` | `String` | **Required**. API access token generated from periculum api |
+| `periculumCallback`      | `MobileAnalysisCallBack` | **Required**. Callback function to get request status |
+
 
 ``` kotlin
-import com.periculum.Periculum
-import com.periculum.models.ErrorType
-import com.periculum.models.PericulumCallback
-...
+Periculum.analytics(
+    phoneNumber = "+2348089182606", // customer phone number (Optional)
+    bvn = "0000000111", // customer bvn (Optional)
+    accessToken = "" // token generated from periculum api
+    object : MobileAnalysisCallBack {
+        override fun onSuccess(response: Array<MobileAnalysis>) {
+            Log.i("TAG", response)
+        }
 
-
-class MainActivity : ComponentActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            SmsExtractTheme {
-                Surface(color = MaterialTheme.colors.background) {
-
-                    Button(
-                        onClick = {
-                            Periculum.analytics(
-                                phoneNumber = "+2348089182606", // customer phone number (Optional)
-                                bvn = "0000000111", // customer bvn (Optional)
-                                accessToken = "", // token generated from periculum api
-                                object : PericulumCallback {
-                                    override fun onSuccess(response: String) {
-                                        Log.i(TAG, response)
-                                    }
-
-                                    override fun onError(
-                                        message: String,
-                                        errorType: ErrorType
-                                    ) {
-                                        Log.i(TAG, "Error type ---> $errorType") // Error Type
-                                        Log.i(TAG, "Error message ---> $message") // Error message
-
-                                        when (errorType) { // handle response error
-                                            ErrorType.SmsPermissionError -> {
-                                                Log.e(TAG, "SmsPermissionError")
-                                            }
-                                            ErrorType.LocationPermissionError -> {
-                                                Log.e(TAG, "LocationPermissionError")
-                                            }
-                                            ErrorType.InternetConnectionError -> {
-                                                Log.e(TAG, "InternetConnectionError")
-                                            }
-                                            ErrorType.LocationNotEnabledError -> {
-                                                Log.e(TAG, "LocationNotEnabledError")
-                                            }
-                                            ErrorType.NetworkRequest -> {
-                                                Log.e(TAG, "NetworkRequest")
-                                            }
-                                            ErrorType.InvalidToken -> {
-                                                Log.e(TAG, "InvalidToken")
-                                            }
-                                            ErrorType.InvalidData -> {
-                                                Log.e(TAG, "InvalidData")
-                                            }
-                                            ErrorType.UnknownError -> {
-                                                Log.e(TAG, "UnknownError")
-                                            }
-                                        }
-                                    }
-                                }
-                            )
-                        },
-                    ) {
-                        Text(text = "Get Analytics")
-                    }
-
-
+        override fun onError(
+            message: String,
+            errorType: ErrorType
+        ) {
+            Log.e("TAG", "Error message ---> $message")
+            when (errorType) { // handle response error
+                ErrorType.SmsPermissionError -> {
+                    Log.e("TAG", "SmsPermissionError")
                 }
+                ...
             }
         }
     }
-}
+)
 ```
 
 
+#### Affordability Parameters
 
-**For Affordability:**
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `dti` | `Double` | **Required**. Debt to income ratio for the affordability analysis. |
+| `loanTenure` | `Int` | **Required**. The period of the loan in months. |
+| `statementKey` | `Int` | **Required**. The key of the statement to generate the affordability analysis for |
+| `averageMonthlyTotalExpenses` | `Double` | **Optional**. Average Monthly Total Expenses |
+| `averageMonthlyLoanRepaymentAmount` | `Double` | **Optional**. Average Monthly Loan Repayment Amount	 |
+| `accessToken` | `String` | **Required**. API access token generated from periculum api |
+| `periculumCallback`      | `interface` | **Required**. Callback function to get request status |
+
+
 
 ``` kotlin
-import com.periculum.Periculum
-import com.periculum.models.ErrorType
-import com.periculum.models.PericulumCallback
-...
+//To generate an affordability statement
+Periculum.affordability(
+    dti = 0.1, // DTI
+    loanTenure = 32, // Loan Tenure
+    statementKey = 932, // Pass a valid statement key
+    averageMonthlyTotalExpenses = 0.0, // Average Monthly Total Expenses (Optional)
+    averageMonthlyLoanRepaymentAmount = 0.0, // Average Monthly Loan Repayment Amount (Optional)
+    accessToken = "", // token generated from periculum api
+    object : PostAffordabilityCallback {
+        override fun onSuccess(response: Affordability) {
+        
+            Log.i("TAG", response)
+        }
 
-
-class MainActivity : ComponentActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            SmsExtractTheme {
-                Surface(color = MaterialTheme.colors.background) {
-
-                    Button(
-                        onClick = {
-                            Periculum.affordability(
-                                dti = 0.1, // DTI
-                                loanTenure = 32, // Loan Tenure
-                                statementKey = 932, // Pass a valid statement key
-                                averageMonthlyTotalExpenses = 0.0, // Average Monthly Total Expenses (Optional)
-                                averageMonthlyLoanRepaymentAmount = 0.0, // Average Monthly Loan Repayment Amount (Optional)
-                                accessToken = "", // token generated from periculum api
-                                object : PericulumCallback {
-                                    override fun onSuccess(response: String) {
-                                        Log.i(TAG, response)
-                                    }
-
-                                    override fun onError(
-                                        message: String,
-                                        errorType: ErrorType
-                                    ) {
-                                        Log.i(TAG, "Error type ---> $errorType") // Error Type
-                                        Log.i(TAG, "Error message ---> $message") // Error message
-
-                                        when (errorType) { // handle response error
-                                            ErrorType.InternetConnectionError -> {
-                                                Log.e(TAG, "InternetConnectionError")
-                                            }
-                                            ErrorType.NetworkRequest -> {
-                                                Log.e(TAG, "NetworkRequest")
-                                            }
-                                            ErrorType.InvalidToken -> {
-                                                Log.e(TAG, "InvalidToken")
-                                            }
-                                            ErrorType.InvalidData -> {
-                                                Log.e(TAG, "InvalidData")
-                                            }
-                                            ErrorType.UnknownError -> {
-                                                Log.e(TAG, "UnknownError")
-                                            }
-                                        }
-                                    }
-                                }
-                            )
-                        },
-                    ) {
-                        Text(text = "Get Affordability")
-                    }
-
-
+        override fun onError(
+            message: String,
+            errorType: ErrorType
+        ) {
+            Log.e("TAG", "Error message ---> $message")
+            when (errorType) { // handle response error
+                ErrorType.InternetConnectionError -> {
+                    Log.e("TAG", "InternetConnectionError")
                 }
+                ...
             }
         }
     }
-}
+)
 ```
 
 **Generate Credit Score**

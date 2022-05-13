@@ -27,6 +27,10 @@ import java.net.Inet4Address
 import java.net.InetAddress
 import java.net.NetworkInterface
 import java.util.*
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
+
+
+
 
 
 internal class Utils {
@@ -145,10 +149,11 @@ internal class Utils {
         return actualConnectedToNetwork
     }
 
+    @SuppressLint("WifiManagerLeak")
     private fun getWifiIp(): String? {
-        val mWifiManager = ApplicationProvider.getApplicationContext<Context>().getSystemService(
-            Context.WIFI_SERVICE
-        ) as WifiManager
+
+        val mWifiManager =
+            PericulumDependency.getApplicationContext().getSystemService(Context.WIFI_SERVICE) as WifiManager
         if (mWifiManager.isWifiEnabled) {
             val ip = mWifiManager.connectionInfo.ipAddress
             return ((ip and 0xFF).toString() + "." + (ip shr 8 and 0xFF) + "." + (ip shr 16 and 0xFF) + "."

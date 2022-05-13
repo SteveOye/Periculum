@@ -5,7 +5,6 @@ import com.google.gson.JsonObject
 import com.periculum.internal.models.Affordability
 import com.periculum.internal.models.AnalyticsModel
 import com.periculum.internal.models.ClientData
-import com.periculum.internal.models.ClientIdentification
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*

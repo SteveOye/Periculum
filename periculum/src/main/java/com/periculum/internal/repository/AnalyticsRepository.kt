@@ -33,14 +33,12 @@ internal class AnalyticsRepository {
         return try {
             val response = RetrofitInstance.api.postAnalytics(accessToken = "Bearer $accessToken", analyticsBody = getAnalyticsData(phoneNumber, bvn, locationModel = locationResult.locationModel!!))
             val data = response.execute()
-            Log.d(TAG, "${data.code()}")
             if(data.isSuccessful) {
                 AnalyticsResponseModel(response = data.body()!!.toString(), isError = false)
             }else {
                 if(data.code() == 401) {
                     AnalyticsResponseModel(message = "Invalid Token. Unauthorized", isError = true, errorType = ErrorType.InvalidToken)
                 }else {
-                    Log.d("Error", "Error message -> ${data.message()}")
                     AnalyticsResponseModel(message = data.message(), isError = true, errorType = ErrorType.NetworkRequest)
                 }
             }
@@ -147,7 +145,10 @@ internal class AnalyticsRepository {
 
     private fun getCameraDetails(): CameraModel {
         val packageManager = PericulumDependency.getApplicationContext().packageManager
-        return CameraModel(isCameraPresent = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY))
+        return CameraModel(
+            isCameraPresent = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY
+            )
+        )
     }
 
     private fun getNetworkDetails(): NetworkModel {

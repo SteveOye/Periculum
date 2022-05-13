@@ -11,6 +11,13 @@ interface PericulumCallback {
     fun onError(message: String, errorType: ErrorType)
 }
 
+interface MobileAnalysisCallBack {
+
+    fun onSuccess(response: Array<MobileAnalysis> )
+
+    fun onError(message: String, errorType: ErrorType)
+}
+
 interface PostAffordabilityCallback {
 
     fun onSuccess(response: Affordability )
