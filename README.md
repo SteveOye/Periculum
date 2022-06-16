@@ -197,7 +197,7 @@ Periculum.analyticsV2(
 )
 ```
 
-**Get Existing Statement Affordability Analysis**
+**Update existing mobile analysis**
 
 ###### 
 
