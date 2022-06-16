@@ -78,591 +78,17 @@ fun MainView() {
                     if (state.value) CircularProgressIndicator(modifier = Modifier.padding(20.dp))
 
                     if(tabIndex == 0) {
-                        val phoneNumberText = rememberSaveable {
-                            mutableStateOf("")
-                        }
-                        OutlinedTextField(
-                            value = phoneNumberText.value,
-                            onValueChange = {
-                                phoneNumberText.value = it
-                            },
-                            placeholder = {
-                                Text(text = "Please enter phone number")
-                            },
-                            label = {
-                                Text(text = "Phone Number")
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                            maxLines = 6,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        val bvnText = rememberSaveable {
-                            mutableStateOf("")
-                        }
-                        OutlinedTextField(
-                            value = bvnText.value,
-                            onValueChange = {
-                                bvnText.value = it
-                            },
-                            placeholder = {
-                                Text(text = "Please enter bvn")
-                            },
-                            label = {
-                                Text(text = "BVN")
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            maxLines = 6,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        val tokenText = rememberSaveable {
-                            mutableStateOf("")
-                        }
-                        OutlinedTextField(
-                            value = tokenText.value,
-                            onValueChange = {
-                                tokenText.value = it
-                            },
-                            placeholder = {
-                                Text(text = "Please enter token")
-                            },
-                            label = {
-                                Text(text = "Token")
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                            maxLines = 6,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Button(
-                            onClick = {
-                                state.value = true
-                                text.value = ""
-                                Periculum.analytics(
-                                    phoneNumber = phoneNumberText.value,
-                                    bvn = bvnText.value,
-                                    accessToken = tokenText.value,
-                                    object : MobileAnalysisCallBack {
-                                        override fun onSuccess(response: Array<MobileAnalysis>) {
-                                            Log.i(TAG, response[0].key.toString())
-                                        }
-
-                                        override fun onError(
-                                            message: String,
-                                            errorType: ErrorType
-                                        ) {
-                                            text.value = "Error type ---> $errorType" // Error Type
-                                            text.value = "Error message ---> $message" // Error message
-                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
-                                                .show()
-                                            state.value = false
-
-                                            when (errorType) { // handle response error
-                                                ErrorType.SmsPermissionError -> {
-                                                    Log.e(TAG, "SmsPermissionError")
-                                                }
-                                                ErrorType.LocationPermissionError -> {
-                                                    Log.e(TAG, "LocationPermissionError")
-                                                }
-                                                ErrorType.InternetConnectionError -> {
-                                                    Log.e(TAG, "InternetConnectionError")
-                                                }
-                                                ErrorType.LocationNotEnabledError -> {
-                                                    Log.e(TAG, "LocationNotEnabledError")
-                                                }
-                                                ErrorType.NetworkRequest -> {
-                                                    Log.e(TAG, "NetworkRequest")
-                                                }
-                                                ErrorType.InvalidToken -> {
-                                                    Log.e(TAG, "InvalidToken")
-                                                }
-                                                ErrorType.InvalidData -> {
-                                                    Log.e(TAG, "InvalidData")
-                                                }
-                                                ErrorType.UnknownError -> {
-                                                    Log.e(TAG, "UnknownError")
-                                                }
-                                            }
-                                        }
-                                    }
-                                )
-                            },
-                            modifier = Modifier.padding(20.dp)
-                        ) {
-                            Text(text = "start process")
-                        }
-                        Text(text = text.value.replace("\\n", "\n"))
-                    }else {
-
-                        val dtiText = rememberSaveable {
-                            mutableStateOf("")
-                        }
-                        OutlinedTextField(
-                            value = dtiText.value,
-                            onValueChange = {
-                                dtiText.value = it
-                            },
-                            placeholder = {
-                                Text(text = "Please enter dti")
-                            },
-                            label = {
-                                Text(text = "DTI")
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            maxLines = 6,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        val loanTenureText = rememberSaveable {
-                            mutableStateOf("")
-                        }
-                        OutlinedTextField(
-                            value = loanTenureText.value,
-                            onValueChange = {
-                                loanTenureText.value = it
-                            },
-                            placeholder = {
-                                Text(text = "Please enter Loan tenure")
-                            },
-                            label = {
-                                Text(text = "Loan Tenure")
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            maxLines = 6,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        val statementKeyText = rememberSaveable {
-                            mutableStateOf("")
-                        }
-                        OutlinedTextField(
-                            value = statementKeyText.value,
-                            onValueChange = {
-                                statementKeyText.value = it
-                            },
-                            placeholder = {
-                                Text(text = "Please enter statement key")
-                            },
-                            label = {
-                                Text(text = "Statement Key")
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            maxLines = 6,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        val tokenText = rememberSaveable {
-                            mutableStateOf("")
-                        }
-                        OutlinedTextField(
-                            value = tokenText.value,
-                            onValueChange = {
-                                tokenText.value = it
-                            },
-                            placeholder = {
-                                Text(text = "Please enter token")
-                            },
-                            label = {
-                                Text(text = "Token")
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                            maxLines = 6,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        val averageMonthlyTotalExpensesText = rememberSaveable {
-                            mutableStateOf("")
-                        }
-                        OutlinedTextField(
-                            value = averageMonthlyTotalExpensesText.value,
-                            onValueChange = {
-                                averageMonthlyTotalExpensesText.value = it
-                            },
-                            placeholder = {
-                                Text(text = "Please Enter Average Monthly Total Expenses")
-                            },
-                            label = {
-                                Text(text = "Average Monthly Total Expenses")
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            maxLines = 6,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        val averageMonthlyLoanRepaymentAmountText = rememberSaveable {
-                            mutableStateOf("")
-                        }
-                        OutlinedTextField(
-                            value = averageMonthlyLoanRepaymentAmountText.value,
-                            onValueChange = {
-                                averageMonthlyLoanRepaymentAmountText.value = it
-                            },
-                            placeholder = {
-                                Text(text = "Please Enter Average Monthly Loan Repayment Amount")
-                            },
-                            label = {
-                                Text(text = "Average Monthly Loan Repayment Amount")
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                            maxLines = 6,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Button(
-                            onClick = {
-                                state.value = true
-                                text.value = ""
-                                if(dtiText.value.isEmpty() || loanTenureText.value.isEmpty() || statementKeyText.value.isEmpty()){
-                                    Toast.makeText(context, "Please make sure you input value for DTI, loanTenure and statement key", Toast.LENGTH_LONG).show()
-                                    state.value = false
-                                }else {
-                                    Periculum.affordability(
-                                        dti = dtiText.value.toDouble(),
-                                        loanTenure = loanTenureText.value.toInt(),
-                                        statementKey = statementKeyText.value.toInt(),
-                                        accessToken = tokenText.value,
-                                        averageMonthlyTotalExpenses = if(averageMonthlyTotalExpensesText.value.trim().isNotEmpty()) averageMonthlyTotalExpensesText.value.toDouble() else null,
-                                        averageMonthlyLoanRepaymentAmount = if(averageMonthlyLoanRepaymentAmountText.value.trim().isNotEmpty()) averageMonthlyLoanRepaymentAmountText.value.toDouble() else null,
-                                        periculumCallback = object : PostAffordabilityCallback {
-                                            override fun onSuccess(response: Affordability) {
-                                                Log.i(TAG, response.dti.toString())
-                                                state.value = false
-                                                text.value = "Success --->\t\t ${response.affordabilityAmount}"
-                                            }
-
-                                            override fun onError(
-                                                message: String,
-                                                errorType: ErrorType
-                                            ) {
-                                                text.value = "Error type ---> $errorType" // Error Type
-                                                text.value = "Error message ---> $message" // Error message
-                                                Toast.makeText(context, message, Toast.LENGTH_LONG)
-                                                    .show()
-                                                state.value = false
-
-                                                when (errorType) { // handle response error
-                                                    ErrorType.InternetConnectionError -> {
-                                                        Log.e(TAG, "InternetConnectionError")
-                                                    }
-                                                    ErrorType.NetworkRequest -> {
-                                                        Log.e(TAG, "NetworkRequest")
-                                                    }
-                                                    ErrorType.InvalidToken -> {
-                                                        Log.e(TAG, "InvalidToken")
-                                                    }
-                                                    ErrorType.InvalidData -> {
-                                                        Log.e(TAG, "InvalidData")
-                                                    }
-                                                    ErrorType.UnknownError -> {
-                                                        Log.e(TAG, "UnknownError")
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    )
-                                }
-                            },
-                            modifier = Modifier.padding(20.dp)
-                        ) {
-                            Text(text = "start process")
-                        }
                         Button(
                             onClick = {
 
-                                Periculum.generateCreditScore(
-                                    statementKey = "125",
-                                    accessToken = key ,
-                                    periculumCallback = object : GenerateCreditScoreCallback {
-                                        override fun onSuccess(response: CreditScore) {
-                                            Log.i(TAG, response.baseScore.toString())
-                                            state.value = false
-                                            text.value = "Success --->\t\t ${response}"
-                                        }
-
-                                        override fun onError(
-                                            message: String,
-                                            errorType: ErrorType
-                                        ) {
-                                            text.value = "Error type ---> $errorType" // Error Type
-                                            text.value = "Error message ---> $message" // Error message
-                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
-                                                .show()
-                                            state.value = false
-
-                                            when (errorType) { // handle response error
-                                                ErrorType.InternetConnectionError -> {
-                                                    Log.e(TAG, "InternetConnectionError")
-                                                }
-                                                ErrorType.NetworkRequest -> {
-                                                    Log.e(TAG, "NetworkRequest")
-                                                }
-                                                ErrorType.InvalidToken -> {
-                                                    Log.e(TAG, "InvalidToken")
-                                                }
-                                                ErrorType.InvalidData -> {
-                                                    Log.e(TAG, "InvalidData")
-                                                }
-                                                ErrorType.UnknownError -> {
-                                                    Log.e(TAG, "UnknownError")
-                                                }
-                                            }
-                                        }
-                                    }
-                                )
-                            },
-                            modifier = Modifier.padding(20.dp)
-                        ) {
-                            Text(text = "start generate credit score score")
-                        }
-                        Button(
-                            onClick = {
-
-                                Periculum.generateCreditScore(
-                                    statementKey = "125",
-                                    accessToken = key ,
-                                    periculumCallback = object : GenerateCreditScoreCallback {
-                                        override fun onSuccess(response: CreditScore) {
-                                            Log.i(TAG, response.baseScore.toString())
-                                            state.value = false
-                                            text.value = "Success --->\t\t ${response}"
-                                        }
-
-                                        override fun onError(
-                                            message: String,
-                                            errorType: ErrorType
-                                        ) {
-                                            text.value = "Error type ---> $errorType" // Error Type
-                                            text.value = "Error message ---> $message" // Error message
-                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
-                                                .show()
-                                            state.value = false
-
-                                            when (errorType) { // handle response error
-                                                ErrorType.InternetConnectionError -> {
-                                                    Log.e(TAG, "InternetConnectionError")
-                                                }
-                                                ErrorType.NetworkRequest -> {
-                                                    Log.e(TAG, "NetworkRequest")
-                                                }
-                                                ErrorType.InvalidToken -> {
-                                                    Log.e(TAG, "InvalidToken")
-                                                }
-                                                ErrorType.InvalidData -> {
-                                                    Log.e(TAG, "InvalidData")
-                                                }
-                                                ErrorType.UnknownError -> {
-                                                    Log.e(TAG, "UnknownError")
-                                                }
-                                            }
-                                        }
-                                    }
-                                )
-                            },
-                            modifier = Modifier.padding(20.dp)
-                        ) {
-                            Text(text = "start generate credit score score")
-                        }
-                        Button(
-                            onClick = {
-
-                                Periculum.getCreditScore(
-                                    statementKey = "125",
-                                    accessToken = key ,
-                                    periculumCallback = object : GetCreditScoreCallback {
-                                        override fun onSuccess(response: Array<CreditScore>) {
-                                            Log.i(TAG, response[0].baseScore.toString())
-                                            state.value = false
-                                            text.value = "Success --->\t\t ${response.size}"
-                                        }
-
-                                        override fun onError(
-                                            message: String,
-                                            errorType: ErrorType
-                                        ) {
-                                            text.value = "Error type ---> $errorType" // Error Type
-                                            text.value = "Error message ---> $message" // Error message
-                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
-                                                .show()
-                                            state.value = false
-
-                                            when (errorType) { // handle response error
-                                                ErrorType.InternetConnectionError -> {
-                                                    Log.e(TAG, "InternetConnectionError")
-                                                }
-                                                ErrorType.NetworkRequest -> {
-                                                    Log.e(TAG, "NetworkRequest")
-                                                }
-                                                ErrorType.InvalidToken -> {
-                                                    Log.e(TAG, "InvalidToken")
-                                                }
-                                                ErrorType.InvalidData -> {
-                                                    Log.e(TAG, "InvalidData")
-                                                }
-                                                ErrorType.UnknownError -> {
-                                                    Log.e(TAG, "UnknownError")
-                                                }
-                                            }
-                                        }
-                                    }
-                                )
-                            },
-                            modifier = Modifier.padding(20.dp)
-                        ) {
-                            Text(text = "start get credit score")
-                        }
-                        Button(
-                            onClick = {
-                                Periculum.getStatementTransaction(
-                                    statementKey = "125",
-                                    accessToken = key ,
-                                    periculumCallback = object : GetStatementTransactionCallback {
-                                        override fun onSuccess(response: Array<StatementTransaction>) {
-                                            Log.i(TAG, response[0].description.toString())
-                                            state.value = false
-                                            text.value = "Success --->\t\t ${response.size}"
-                                        }
-
-                                        override fun onError(
-                                            message: String,
-                                            errorType: ErrorType
-                                        ) {
-                                            text.value = "Error type ---> $errorType" // Error Type
-                                            text.value = "Error message ---> $message" // Error message
-                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
-                                                .show()
-                                            state.value = false
-
-                                            when (errorType) { // handle response error
-                                                ErrorType.InternetConnectionError -> {
-                                                    Log.e(TAG, "InternetConnectionError")
-                                                }
-                                                ErrorType.NetworkRequest -> {
-                                                    Log.e(TAG, "NetworkRequest")
-                                                }
-                                                ErrorType.InvalidToken -> {
-                                                    Log.e(TAG, "InvalidToken")
-                                                }
-                                                ErrorType.InvalidData -> {
-                                                    Log.e(TAG, "InvalidData")
-                                                }
-                                                ErrorType.UnknownError -> {
-                                                    Log.e(TAG, "UnknownError")
-                                                }
-                                            }
-                                        }
-                                    }
-                                )
-                            },
-                            modifier = Modifier.padding(20.dp)
-                        ) {
-                            Text(text = "start get statement transaction")
-                        }
-                        Button(
-                            onClick = {
-
-                                Periculum.getStatement(
-                                    statementKey = "125",
-                                    accessToken = key ,
-                                    periculumCallback = object : GetStatementCallback {
-                                        override fun onSuccess(response: Statements) {
-                                            Log.i(TAG, response.statementType.toString())
-                                            state.value = false
-                                            text.value = "Success --->\t\t ${response}"
-                                        }
-
-                                        override fun onError(
-                                            message: String,
-                                            errorType: ErrorType
-                                        ) {
-                                            text.value = "Error type ---> $errorType" // Error Type
-                                            text.value = "Error message ---> $message" // Error message
-                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
-                                                .show()
-                                            state.value = false
-
-                                            when (errorType) { // handle response error
-                                                ErrorType.InternetConnectionError -> {
-                                                    Log.e(TAG, "InternetConnectionError")
-                                                }
-                                                ErrorType.NetworkRequest -> {
-                                                    Log.e(TAG, "NetworkRequest")
-                                                }
-                                                ErrorType.InvalidToken -> {
-                                                    Log.e(TAG, "InvalidToken")
-                                                }
-                                                ErrorType.InvalidData -> {
-                                                    Log.e(TAG, "InvalidData")
-                                                }
-                                                ErrorType.UnknownError -> {
-                                                    Log.e(TAG, "UnknownError")
-                                                }
-                                            }
-                                        }
-                                    }
-                                )
-                            },
-                            modifier = Modifier.padding(20.dp)
-                        ) {
-                            Text(text = "start statement")
-                        }
-                        Button(
-                            onClick = {
-
-                                Periculum.getAffordability(
-                                    statementKey = "125",
-                                    accessToken = key ,
-                                    periculumCallback = object : GetAffordabilityCallback {
-                                        override fun onSuccess(response: Array<Affordability>) {
-                                            Log.i(TAG, response[1].createdDate.toString())
-                                            state.value = false
-                                            text.value = "Success --->\t\t ${response.size}"
-                                        }
-
-                                        override fun onError(
-                                            message: String,
-                                            errorType: ErrorType
-                                        ) {
-                                            text.value = "Error type ---> $errorType" // Error Type
-                                            text.value = "Error message ---> $message" // Error message
-                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
-                                                .show()
-                                            state.value = false
-
-                                            when (errorType) { // handle response error
-                                                ErrorType.InternetConnectionError -> {
-                                                    Log.e(TAG, "InternetConnectionError")
-                                                }
-                                                ErrorType.NetworkRequest -> {
-                                                    Log.e(TAG, "NetworkRequest")
-                                                }
-                                                ErrorType.InvalidToken -> {
-                                                    Log.e(TAG, "InvalidToken")
-                                                }
-                                                ErrorType.InvalidData -> {
-                                                    Log.e(TAG, "InvalidData")
-                                                }
-                                                ErrorType.UnknownError -> {
-                                                    Log.e(TAG, "UnknownError")
-                                                }
-                                            }
-                                        }
-                                    }
-                                )
-                            },
-                            modifier = Modifier.padding(20.dp)
-                        ) {
-                            Text(text = "start affordability")
-                        }
-                        Button(
-                            onClick = {
-
-                                Periculum.analytics(
+                                Periculum.analyticsV1(
                                     phoneNumber = "09012234567",
                                     bvn = "349966",
-                                    accessToken = key ,
-                                    periculumCallback = object : MobileAnalysisCallBack {
+                                    publicKey = "nucleusis123" ,
+                                    periculumCallback = object : PericulumCallback {
 
-                                        override fun onSuccess(response: Array<MobileAnalysis>) {
-                                            text.value = "Success --->\t\t ${response[0]}"
+                                        override fun onSuccess(response: String) {
+                                            text.value = "Success --->\t\t ${response}"
                                         }
 
                                         override fun onError(
@@ -698,10 +124,113 @@ fun MainView() {
                             },
                             modifier = Modifier.padding(20.dp)
                         ) {
-                            Text(text = "Generate Mobile Analysis")
+                            Text(text = "Generate Mobile Analysis V1")
                         }
                         Text(text = text.value.replace("\\n", "\n"))
-                    }
+
+                        Button(
+                            onClick = {
+
+                                Periculum.analyticsV2(
+                                    phoneNumber = "09012234567",
+                                    bvn = "349966",
+                                    publicKey = "nucleusis123" ,
+                                    periculumCallback = object : MobileInsightCallback {
+
+                                        override fun onSuccess(response: OverviewKey) {
+                                            text.value = "Success --->\t\t ${response.mobileInsightsOverviewKey}"
+                                        }
+
+                                        override fun onError(
+                                            message: String,
+                                            errorType: ErrorType
+                                        ) {
+                                            text.value = "Error type ---> $errorType" // Error Type
+                                            text.value = "Error message ---> $message" // Error message
+                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
+                                                .show()
+                                            state.value = false
+
+                                            when (errorType) { // handle response error
+                                                ErrorType.InternetConnectionError -> {
+                                                    Log.e(TAG, "InternetConnectionError")
+                                                }
+                                                ErrorType.NetworkRequest -> {
+                                                    Log.e(TAG, "NetworkRequest")
+                                                }
+                                                ErrorType.InvalidToken -> {
+                                                    Log.e(TAG, "InvalidToken")
+                                                }
+                                                ErrorType.InvalidData -> {
+                                                    Log.e(TAG, "InvalidData")
+                                                }
+                                                ErrorType.UnknownError -> {
+                                                    Log.e(TAG, "UnknownError")
+                                                }
+                                            }
+                                        }
+                                    }
+                                )
+                            },
+                            modifier = Modifier.padding(20.dp)
+                        ) {
+                            Text(text = "Generate Mobile Analysis V2")
+                        }
+
+
+                        Button(
+                            onClick = {
+
+                                Periculum.updateAnalyticsV2(
+                                    phoneNumber = "09012234567",
+                                    bvn = "349966",
+                                    publicKey = "nucleusis123" ,
+                                    overviewKey = "6",
+                                    periculumCallback = object : MobileInsightCallback {
+
+                                        override fun onSuccess(response: OverviewKey) {
+                                            text.value = "Success --->\t\t ${response.mobileInsightsOverviewKey}"
+                                        }
+
+                                        override fun onError(
+                                            message: String,
+                                            errorType: ErrorType
+                                        ) {
+                                            text.value = "Error type ---> $errorType" // Error Type
+                                            text.value = "Error message ---> $message" // Error message
+                                            Toast.makeText(context, message, Toast.LENGTH_LONG)
+                                                .show()
+                                            state.value = false
+
+                                            when (errorType) { // handle response error
+                                                ErrorType.InternetConnectionError -> {
+                                                    Log.e(TAG, "InternetConnectionError")
+                                                }
+                                                ErrorType.NetworkRequest -> {
+                                                    Log.e(TAG, "NetworkRequest")
+                                                }
+                                                ErrorType.InvalidToken -> {
+                                                    Log.e(TAG, "InvalidToken")
+                                                }
+                                                ErrorType.InvalidData -> {
+                                                    Log.e(TAG, "InvalidData")
+                                                }
+                                                ErrorType.UnknownError -> {
+                                                    Log.e(TAG, "UnknownError")
+                                                }
+                                            }
+                                        }
+                                    }
+                                )
+                            },
+                            modifier = Modifier.padding(20.dp)
+                        ) {
+                            Text(text = "Update Mobile Analysis V2")
+                        }
+                        Text(text = text.value.replace("\\n", "\n"))
+
+                    }else {
+                        }
                 }
             }
         }

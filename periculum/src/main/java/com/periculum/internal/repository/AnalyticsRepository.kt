@@ -13,6 +13,7 @@ import com.periculum.internal.utils.PericulumDependency
 import com.periculum.internal.utils.Utils
 import com.periculum.internal.utils.getProjectName
 import com.periculum.models.ErrorType
+import java.security.PublicKey
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.random.Random
@@ -21,25 +22,146 @@ import kotlin.random.Random
 internal class AnalyticsRepository {
 
 
-    internal suspend fun postAnalyticsDataToServer(
+    internal suspend fun mobileAnaylticsV1(
+        publicKey: String,
         phoneNumber: String,
         bvn: String,
-        accessToken: String
     ): AnalyticsResponseModel {
         val locationResult = LocationRepository().getUserLocationData()
         if (locationResult.errorType != ErrorType.Null) {
             return AnalyticsResponseModel(message = locationResult.message, isError =  true, errorType = locationResult.errorType)
         }
         return try {
-            val response = RetrofitInstance.api.postAnalytics(accessToken = "Bearer $accessToken", analyticsBody = getAnalyticsData(phoneNumber, bvn, locationModel = locationResult.locationModel!!))
+            val response = RetrofitInstance.api.postAnalytics(analyticsBody = getAnalyticsData(phoneNumber, bvn, publicKey, locationModel = locationResult.locationModel!!))
             val data = response.execute()
             if(data.isSuccessful) {
                 AnalyticsResponseModel(response = data.body()!!.toString(), isError = false)
             }else {
                 if(data.code() == 401) {
-                    AnalyticsResponseModel(message = "Invalid Token. Unauthorized", isError = true, errorType = ErrorType.InvalidToken)
+                    AnalyticsResponseModel(message = "Invalid Public key", isError = true, errorType = ErrorType.InvalidToken)
                 }else {
                     AnalyticsResponseModel(message = data.message(), isError = true, errorType = ErrorType.NetworkRequest)
+                }
+            }
+        } catch (e: Exception) {
+            if (!Utils().isInternetConnected()) {
+                AnalyticsResponseModel(message = "There is no access to the internet.", isError = true, errorType = ErrorType.InternetConnectionError)
+            }else if (!Utils().isSmsPermissionGranted()) {
+                AnalyticsResponseModel(
+                    message = "Permission to read SMS messages from the device has been denied.",
+                    isError = true,
+                    errorType = ErrorType.SmsPermissionError
+                )
+            } else if (!Utils().isLocationPermissionGranted()) {
+                AnalyticsResponseModel(
+                    message = "Permission to read the location of the device has been denied.",
+                    isError = true,
+                    errorType = ErrorType.LocationPermissionError
+                )
+            } else if (!Utils().isLocationEnabled()) {
+                AnalyticsResponseModel(
+                    message = "Location not enabled.",
+                    isError = true,
+                    errorType = ErrorType.LocationNotEnabledError
+                )
+            } else {
+                AnalyticsResponseModel(
+                    message = "An error occurred while submitting the request",
+                    isError = true,
+                    errorType = ErrorType.NetworkRequest
+                )
+            }
+        }
+    }
+
+    internal suspend fun mobileInsightV2(
+        publicKey: String,
+        phoneNumber: String,
+        bvn: String,
+    ): AnalyticsResponseModel {
+        val locationResult = LocationRepository().getUserLocationData()
+        if (locationResult.errorType != ErrorType.Null) {
+            return AnalyticsResponseModel(message = locationResult.message, isError =  true, errorType = locationResult.errorType)
+        }
+        return try {
+            val response = RetrofitInstance.api.mobileInsightsV2(analyticsBody = getAnalyticsData(phoneNumber, bvn, publicKey, locationModel = locationResult.locationModel!!))
+            val data = response.execute()
+            if(data.isSuccessful) {
+                AnalyticsResponseModel(response = data.body()!!.toString(), isError = false)
+            }else {
+                when {
+                    data.code() == 401 -> {
+                        AnalyticsResponseModel(message = "Invalid Public key", isError = true, errorType = ErrorType.InvalidToken)
+                    }
+                    data.code() == 400 -> {
+                        AnalyticsResponseModel(message = "There is already an Insights with the unique id provided. Please use the PATCH endpoint to update the existing Insights.", isError = true, errorType = ErrorType.InvalidToken)
+                    }
+                    else -> {
+                        AnalyticsResponseModel(message = data.message(), isError = true, errorType = ErrorType.NetworkRequest)
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            if (!Utils().isInternetConnected()) {
+                AnalyticsResponseModel(message = "There is no access to the internet.", isError = true, errorType = ErrorType.InternetConnectionError)
+            }else if (!Utils().isSmsPermissionGranted()) {
+                AnalyticsResponseModel(
+                    message = "Permission to read SMS messages from the device has been denied.",
+                    isError = true,
+                    errorType = ErrorType.SmsPermissionError
+                )
+            } else if (!Utils().isLocationPermissionGranted()) {
+                AnalyticsResponseModel(
+                    message = "Permission to read the location of the device has been denied.",
+                    isError = true,
+                    errorType = ErrorType.LocationPermissionError
+                )
+            } else if (!Utils().isLocationEnabled()) {
+                AnalyticsResponseModel(
+                    message = "Location not enabled.",
+                    isError = true,
+                    errorType = ErrorType.LocationNotEnabledError
+                )
+            } else {
+                AnalyticsResponseModel(
+                    message = "An error occurred while submitting the request",
+                    isError = true,
+                    errorType = ErrorType.NetworkRequest
+                )
+            }
+        }
+    }
+
+
+    internal suspend fun updateMobileInsightV2(
+        publicKey: String,
+        overviewKey: String,
+        phoneNumber: String?,
+        bvn: String?,
+    ): AnalyticsResponseModel {
+        val locationResult = LocationRepository().getUserLocationData()
+        if (locationResult.errorType != ErrorType.Null) {
+            return AnalyticsResponseModel(message = locationResult.message, isError =  true, errorType = locationResult.errorType)
+        }
+        return try {
+            val response = RetrofitInstance.api.updateMobileInsightV2(
+                overviewKey = overviewKey,
+                analyticsBody = getAnalyticsData(phoneNumber!!, bvn!!, publicKey,locationModel = locationResult.locationModel!!)
+                )
+            val data = response.execute()
+            if(data.isSuccessful) {
+                AnalyticsResponseModel(response = data.body()!!.toString(), isError = false)
+            }else {
+                when {
+                    data.code() == 401 -> {
+                        AnalyticsResponseModel(message = "Invalid Public key", isError = true, errorType = ErrorType.InvalidToken)
+                    }
+                    data.code() == 400 -> {
+                        AnalyticsResponseModel(message = "There is already an Insights with the unique id provided. Please use the PATCH endpoint to update the existing Insights.", isError = true, errorType = ErrorType.InvalidToken)
+                    }
+                    else -> {
+                        AnalyticsResponseModel(message = data.message(), isError = true, errorType = ErrorType.NetworkRequest)
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -76,6 +198,7 @@ internal class AnalyticsRepository {
     private suspend fun getAnalyticsData(
         phoneNumber: String,
         bvn: String,
+        publicKey: String,
         locationModel: LocationModel
     ): AnalyticsModel {
         val packageManager = PericulumDependency.getApplicationContext().packageManager
@@ -85,6 +208,7 @@ internal class AnalyticsRepository {
         )
 
         return AnalyticsModel(
+            publicKey = publicKey,
             statementName = "${SimpleDateFormat("dd|MM|yyyy|HH|mm|ss|SSS|", Locale.getDefault()).format(System.currentTimeMillis())}|${Random.nextFloat()}|$phoneNumber",
             appName = PericulumDependency.getApplicationContext().getProjectName(),
             bundleId = PericulumDependency.getApplicationContext().packageName,
