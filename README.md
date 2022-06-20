@@ -9,7 +9,7 @@ The library gives you credit score information for your customer. No stress :)
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
 
-[![](https://jitpack.io/v/AshaluwalaKazeem/Periculum.svg)](https://jitpack.io/#AshaluwalaKazeem/Periculum)
+[![](https://img.shields.io/badge/jitpack-2.0.0-green)](https://jitpack.io/#AshaluwalaKazeem/Periculum)
 
 
 ## Compatibility
