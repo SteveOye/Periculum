@@ -7,191 +7,87 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.periculum.internal.models.*
 import com.periculum.models.*
+import java.security.PublicKey
 
 
 object Periculum {
 
-    fun analytics(
+    fun analyticsV1(
         phoneNumber: String,
         bvn: String,
-        accessToken: String,
-        periculumCallback: MobileAnalysisCallBack
+        publicKey: String,
+        periculumCallback: PericulumCallback
     ) {
         runBlocking {
         }
         GlobalScope.launch(Dispatchers.Main) {
-            val response: Response = PericulumManager().startAnalytics(
+            val response: Response = PericulumManager().startAnalyticsV1(
                 phoneNumber = phoneNumber,
                 bvn = bvn,
-                accessToken = accessToken
+                publicKey = publicKey
+            )
+            if (response.isError) {
+                periculumCallback.onError(response.message, response.errorType)
+                coroutineContext.cancel()
+            } else {
+                periculumCallback.onSuccess(response.responseBody!!)
+                coroutineContext.cancel()
+            }
+        }
+    }
+
+    fun analyticsV2(
+        phoneNumber: String,
+        bvn: String,
+        publicKey: String,
+        periculumCallback: MobileInsightCallback
+    ) {
+        runBlocking {
+        }
+        GlobalScope.launch(Dispatchers.Main) {
+            val response: Response = PericulumManager().startAnalyticsV2(
+                phoneNumber = phoneNumber,
+                bvn = bvn,
+                publicKey = publicKey
             )
             if (response.isError) {
                 periculumCallback.onError(response.message, response.errorType)
                 coroutineContext.cancel()
             } else {
                 val gson: Gson = GsonBuilder().create()
-                val mobileAnalysis: Array<MobileAnalysis> = gson.fromJson(response.responseBody!!, Array<MobileAnalysis>::class.java)
-                periculumCallback.onSuccess(mobileAnalysis)
+                val overviewKeyResponse: OverviewKey = gson.fromJson(response.responseBody.toString(), OverviewKey::class.java)
+                periculumCallback.onSuccess(overviewKeyResponse)
                 coroutineContext.cancel()
             }
         }
     }
 
-    fun affordability(
-        dti: Double, loanTenure: Int, statementKey: Int,
-        accessToken: String,
-        averageMonthlyLoanRepaymentAmount: Double? = null,
-        averageMonthlyTotalExpenses: Double? = null,
-        periculumCallback: PostAffordabilityCallback
+    fun updateAnalyticsV2(
+        phoneNumber: String?,
+        bvn: String?,
+        publicKey: String,
+        overviewKey: String,
+        periculumCallback: MobileInsightCallback
     ) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val response = PericulumManager().startAffordability(dti = dti, loanTenure = loanTenure, statementKey = statementKey, averageMonthlyTotalExpenses = averageMonthlyTotalExpenses, averageMonthlyLoanRepaymentAmount = averageMonthlyLoanRepaymentAmount, accessToken = accessToken)
-            if (response.isError) {
-                periculumCallback.onError(response.message, response.errorType)
-                coroutineContext.cancel()
-            } else {
-
-                val gson: Gson = GsonBuilder().create()
-                val affordability: Affordability = gson.fromJson(response.responseBody!!, Affordability::class.java)
-                periculumCallback.onSuccess(affordability)
-                coroutineContext.cancel()
-            }
+        runBlocking {
         }
-    }
-
-
-    fun generateCreditScore(statementKey: String,
-        accessToken: String,
-        periculumCallback: GenerateCreditScoreCallback
-    ) {
         GlobalScope.launch(Dispatchers.Main) {
-            val response = PericulumManager().startGenerateCreditScore(
-                statementKey = statementKey,
-                accessToken = accessToken
+            val response: Response = PericulumManager().startPatchAnalyticsV2(
+                phoneNumber = phoneNumber!!,
+                bvn = bvn!!,
+                publicKey = publicKey,
+                overviewKey =  overviewKey,
             )
             if (response.isError) {
                 periculumCallback.onError(response.message, response.errorType)
                 coroutineContext.cancel()
             } else {
+                Log.d("TAG", "updateAnalyticsV2: " + response.responseBody.toString())
                 val gson: Gson = GsonBuilder().create()
-                val creditScore: CreditScore = gson.fromJson(response.responseBody!!, CreditScore::class.java)
-
-                Log.d("Response", creditScore.baseScore.toString())
-                periculumCallback.onSuccess(creditScore)
+                val overviewKeyResponse: OverviewKey = gson.fromJson(response.responseBody.toString(), OverviewKey::class.java)
+                periculumCallback.onSuccess(overviewKeyResponse)
                 coroutineContext.cancel()
             }
         }
     }
-
-    fun getCreditScore(statementKey: String,
-                            accessToken: String,
-                            periculumCallback: GetCreditScoreCallback
-    ) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val response = PericulumManager().startGetCreditScore(
-                statementKey = statementKey,
-                accessToken = accessToken
-            )
-            if (response.isError) {
-                periculumCallback.onError(response.message, response.errorType)
-                coroutineContext.cancel()
-            } else {
-                val gson: Gson = GsonBuilder().create()
-                val creditScore: Array<CreditScore> = gson.fromJson(response.responseBody!!, Array<CreditScore>::class.java)
-
-                periculumCallback.onSuccess(creditScore)
-                coroutineContext.cancel()
-            }
-        }
-    }
-
-    fun getStatementTransaction(statementKey: String,
-                       accessToken: String,
-                       periculumCallback: GetStatementTransactionCallback
-    ) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val response = PericulumManager().startGetStatementTransaction(
-                statementKey = statementKey,
-                accessToken = accessToken
-            )
-            if (response.isError) {
-                periculumCallback.onError(response.message, response.errorType)
-                coroutineContext.cancel()
-            } else {
-                val gson: Gson = GsonBuilder().create()
-                val statements: Array<StatementTransaction> = gson.fromJson(response.responseBody!!, Array<StatementTransaction>::class.java)
-
-                periculumCallback.onSuccess(statements)
-                coroutineContext.cancel()
-            }
-        }
-    }
-
-    fun getStatement(statementKey: String,
-                            accessToken: String,
-                            periculumCallback: GetStatementCallback
-    ) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val response = PericulumManager().startGetStatement(
-                statementKey = statementKey,
-                accessToken = accessToken
-            )
-            if (response.isError) {
-                periculumCallback.onError(response.message, response.errorType)
-                coroutineContext.cancel()
-            } else {
-                val gson: Gson = GsonBuilder().create()
-                val statements: Statements = gson.fromJson(response.responseBody!!, Statements::class.java)
-
-                Log.d("Response", statements.processingStatus.toString())
-                periculumCallback.onSuccess(statements)
-                coroutineContext.cancel()
-            }
-        }
-    }
-
-    fun getAffordability(statementKey: String,
-                                accessToken: String,
-                                periculumCallback: GetAffordabilityCallback
-    ) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val response = PericulumManager().startGetAffordability(
-                statementKey = statementKey,
-                accessToken = accessToken
-            )
-            if (response.isError) {
-                periculumCallback.onError(response.message, response.errorType)
-                coroutineContext.cancel()
-            } else {
-                val gson: Gson = GsonBuilder().create()
-                val affordability: Array<Affordability> = gson.fromJson(response.responseBody!!, Array<Affordability>::class.java)
-
-                periculumCallback.onSuccess(affordability)
-                coroutineContext.cancel()
-            }
-        }
-    }
-
-    fun patchClientIdentification(
-                         accessToken: String,
-                         clientData: ClientData,
-                         periculumCallback: PatchIdentificationCallback
-    ) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val response = PericulumManager().startPatchIdentification(
-                accessToken = accessToken,
-                clientData =  clientData,
-            )
-            if (response.isError) {
-                periculumCallback.onError(response.message, response.errorType)
-                coroutineContext.cancel()
-            } else {
-                periculumCallback.onSuccess(response.responseBody.toString())
-                coroutineContext.cancel()
-            }
-        }
-    }
-
-
-
 }
