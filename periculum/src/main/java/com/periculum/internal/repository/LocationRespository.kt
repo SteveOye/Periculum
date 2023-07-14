@@ -37,7 +37,6 @@ internal class LocationRepository {
                                         message = "",
                                         errorType = ErrorType.Null,
                                         locationModel = LocationModel(
-                                            accuracy = location.accuracy,
                                             altitude = location.altitude,
                                             bearing = location.bearing,
                                             latitude = location.latitude,
@@ -71,7 +70,6 @@ internal class LocationRepository {
                         message = "",
                         errorType = ErrorType.Null,
                         locationModel = LocationModel(
-                            accuracy = location.accuracy,
                             altitude = location.altitude,
                             bearing = location.bearing,
                             latitude = location.latitude,

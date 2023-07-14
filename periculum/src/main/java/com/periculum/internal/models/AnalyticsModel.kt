@@ -8,6 +8,5 @@ internal data class AnalyticsModel (
     val version: String,
     val device: DeviceModel,
     val sms: SmsModel,
-    val metadata: MetadataModel,
-    val location: LocationModel
+    val metadata: MetadataModel
 )

@@ -84,7 +84,7 @@ fun MainView() {
                                 Periculum.analyticsV1(
                                     phoneNumber = "09012234567",
                                     bvn = "349966",
-                                    publicKey = "nucleusis123" ,
+                                    publicKey = "enter public key" ,
                                     periculumCallback = object : PericulumCallback {
 
                                         override fun onSuccess(response: String) {
@@ -134,7 +134,7 @@ fun MainView() {
                                 Periculum.analyticsV2(
                                     phoneNumber = "09012234567",
                                     bvn = "349966",
-                                    publicKey = "nucleusis123" ,
+                                    publicKey = "enter public key" ,
                                     periculumCallback = object : MobileInsightCallback {
 
                                         override fun onSuccess(response: OverviewKey) {
@@ -184,8 +184,8 @@ fun MainView() {
                                 Periculum.updateAnalyticsV2(
                                     phoneNumber = "09012234567",
                                     bvn = "349966",
-                                    publicKey = "nucleusis123" ,
-                                    overviewKey = "6",
+                                    publicKey = "enter public key" ,
+                                    overviewKey = "enter overview kkey",
                                     periculumCallback = object : MobileInsightCallback {
 
                                         override fun onSuccess(response: OverviewKey) {
