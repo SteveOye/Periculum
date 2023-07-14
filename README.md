@@ -7,9 +7,10 @@ The library gives you credit score information for your customer. No stress :)
 
 ## Badges
 
-[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
 
-[![](https://img.shields.io/badge/jitpack-2.0.0-green)](https://jitpack.io/#AshaluwalaKazeem/Periculum)
+
+[![](https://img.shields.io/badge/jitpack-2.0.1-green)](https://jitpack.io/#AshaluwalaKazeem/Periculum)
 
 
 ## Compatibility
@@ -38,7 +39,7 @@ allprojects {
 
 ``` gradle
 dependencies {
-    implementation 'com.github.Periculum-io:Periculum:1.0.6-beta'
+    implementation 'com.github.Periculum-io:Periculum:2.0.1'
 }
 ```
 
@@ -51,9 +52,6 @@ dependencies {
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_SMS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 ```
 
 
@@ -66,8 +64,6 @@ to handle error cases.
 | :-------- | :-------------------------------- |
 | `InternetConnectionError`      | There is no access to the internet.  |
 | `SmsPermissionError`      | Permission to read SMS messages from the device has been denied. |
-| `LocationPermissionError`      | Permission to read the location of the device has been denied. |
-| `LocationNotEnabledError`      | Location not enabled. |
 | `UnknownError`      | Error Occurred. |
 | `NetworkRequest`      | While submitting the request, a network error occurred. |
 | `InvalidToken`      | Invalid access token |
@@ -78,8 +74,6 @@ to handle error cases.
 enum class ErrorType {
     InternetConnectionError,
     SmsPermissionError,
-    LocationPermissionError,
-    LocationNotEnabledError,
     UnknownError,
     NetworkRequest,
     InvalidToken,
@@ -273,9 +267,6 @@ The permissions that must be granted in order for this library to function are l
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.READ_SMS"/>
 <uses-permission android:name="android.permission.INTERNET"/>
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 ```
 ## Contributing
 
