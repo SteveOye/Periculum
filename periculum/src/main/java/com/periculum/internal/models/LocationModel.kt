@@ -1,7 +1,6 @@
 package com.periculum.internal.models
 
 internal data class LocationModel(
-    val accuracy: Float,
     val altitude: Double,
     val bearing: Float,
     val latitude: Double,

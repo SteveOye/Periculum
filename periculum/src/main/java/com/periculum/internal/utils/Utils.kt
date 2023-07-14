@@ -42,34 +42,34 @@ internal class Utils {
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    internal fun isLocationPermissionGranted(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return ContextCompat.checkSelfPermission(
-                PericulumDependency.getApplicationContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                PericulumDependency.getApplicationContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                PericulumDependency.getApplicationContext(),
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        } else {
-            return ContextCompat.checkSelfPermission(
-                PericulumDependency.getApplicationContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                PericulumDependency.getApplicationContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        }
-    }
-
-    internal fun isLocationEnabled(): Boolean {
-        val locationManager = PericulumDependency.getApplicationContext()
-            .getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return LocationManagerCompat.isLocationEnabled(locationManager)
-    }
+//    internal fun isLocationPermissionGranted(): Boolean {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            return ContextCompat.checkSelfPermission(
+//                PericulumDependency.getApplicationContext(),
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+//                PericulumDependency.getApplicationContext(),
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+//                PericulumDependency.getApplicationContext(),
+//                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED
+//        } else {
+//            return ContextCompat.checkSelfPermission(
+//                PericulumDependency.getApplicationContext(),
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+//                PericulumDependency.getApplicationContext(),
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED
+//        }
+//    }
+//
+//    internal fun isLocationEnabled(): Boolean {
+//        val locationManager = PericulumDependency.getApplicationContext()
+//            .getSystemService(Context.LOCATION_SERVICE) as LocationManager
+//        return LocationManagerCompat.isLocationEnabled(locationManager)
+//    }
 
     /**
      * This method is used to get the connection of a device
@@ -115,8 +115,8 @@ internal class Utils {
             PericulumDependency.getApplicationContext().contentResolver,
             Settings.Secure.ANDROID_ID
         )
-            ?: "99" +
-            Build.BOARD.length % 10 + Build.DISPLAY.length % 10 + Build.HOST.length % 10 + Build.ID.length % 10 + Build.MANUFACTURER.length % 10 + Build.MODEL.length % 10 + Build.PRODUCT.length % 10 + Build.TAGS.length % 10 + Build.BRAND.length % 10 + Build.DEVICE.length % 10 + Build.TYPE.length % 10 + Build.USER.length % 10
+            ?: ("99" +
+                    Build.BOARD.length % 10 + Build.DISPLAY.length % 10 + Build.HOST.length % 10 + Build.ID.length % 10 + Build.MANUFACTURER.length % 10 + Build.MODEL.length % 10 + Build.PRODUCT.length % 10 + Build.TAGS.length % 10 + Build.BRAND.length % 10 + Build.DEVICE.length % 10 + Build.TYPE.length % 10 + Build.USER.length % 10)
     }
 
     internal fun isTablet(): Boolean {

@@ -134,7 +134,7 @@ fun MainView() {
                                 Periculum.analyticsV2(
                                     phoneNumber = "09012234567",
                                     bvn = "349966",
-                                    publicKey = "nucleusis123" ,
+                                    publicKey = "periculumprod123" ,
                                     periculumCallback = object : MobileInsightCallback {
 
                                         override fun onSuccess(response: OverviewKey) {

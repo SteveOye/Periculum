@@ -27,12 +27,12 @@ internal class AnalyticsRepository {
         phoneNumber: String,
         bvn: String,
     ): AnalyticsResponseModel {
-        val locationResult = LocationRepository().getUserLocationData()
-        if (locationResult.errorType != ErrorType.Null) {
-            return AnalyticsResponseModel(message = locationResult.message, isError =  true, errorType = locationResult.errorType)
-        }
+//        val locationResult = LocationRepository().getUserLocationData()
+//        if (locationResult.errorType != ErrorType.Null) {
+//            return AnalyticsResponseModel(message = locationResult.message, isError =  true, errorType = locationResult.errorType)
+//        }
         return try {
-            val response = RetrofitInstance.api.postAnalytics(analyticsBody = getAnalyticsData(phoneNumber, bvn, publicKey, locationModel = locationResult.locationModel!!))
+            val response = RetrofitInstance.api.postAnalytics(analyticsBody = getAnalyticsData(phoneNumber, bvn, publicKey))
             val data = response.execute()
             if(data.isSuccessful) {
                 AnalyticsResponseModel(response = data.body()!!.toString(), isError = false)
@@ -52,19 +52,21 @@ internal class AnalyticsRepository {
                     isError = true,
                     errorType = ErrorType.SmsPermissionError
                 )
-            } else if (!Utils().isLocationPermissionGranted()) {
-                AnalyticsResponseModel(
-                    message = "Permission to read the location of the device has been denied.",
-                    isError = true,
-                    errorType = ErrorType.LocationPermissionError
-                )
-            } else if (!Utils().isLocationEnabled()) {
-                AnalyticsResponseModel(
-                    message = "Location not enabled.",
-                    isError = true,
-                    errorType = ErrorType.LocationNotEnabledError
-                )
-            } else {
+            }
+//            else if (!Utils().isLocationPermissionGranted()) {
+//                AnalyticsResponseModel(
+//                    message = "Permission to read the location of the device has been denied.",
+//                    isError = true,
+//                    errorType = ErrorType.LocationPermissionError
+//                )
+//            } else if (!Utils().isLocationEnabled()) {
+//                AnalyticsResponseModel(
+//                    message = "Location not enabled.",
+//                    isError = true,
+//                    errorType = ErrorType.LocationNotEnabledError
+//                )
+//            }
+            else {
                 AnalyticsResponseModel(
                     message = "An error occurred while submitting the request",
                     isError = true,
@@ -79,12 +81,9 @@ internal class AnalyticsRepository {
         phoneNumber: String,
         bvn: String,
     ): AnalyticsResponseModel {
-        val locationResult = LocationRepository().getUserLocationData()
-        if (locationResult.errorType != ErrorType.Null) {
-            return AnalyticsResponseModel(message = locationResult.message, isError =  true, errorType = locationResult.errorType)
-        }
+
         return try {
-            val response = RetrofitInstance.api.mobileInsightsV2(analyticsBody = getAnalyticsData(phoneNumber, bvn, publicKey, locationModel = locationResult.locationModel!!))
+            val response = RetrofitInstance.api.mobileInsightsV2(analyticsBody = getAnalyticsData(phoneNumber, bvn, publicKey))
             val data = response.execute()
             if(data.isSuccessful) {
                 AnalyticsResponseModel(response = data.body()!!.toString(), isError = false)
@@ -110,19 +109,21 @@ internal class AnalyticsRepository {
                     isError = true,
                     errorType = ErrorType.SmsPermissionError
                 )
-            } else if (!Utils().isLocationPermissionGranted()) {
-                AnalyticsResponseModel(
-                    message = "Permission to read the location of the device has been denied.",
-                    isError = true,
-                    errorType = ErrorType.LocationPermissionError
-                )
-            } else if (!Utils().isLocationEnabled()) {
-                AnalyticsResponseModel(
-                    message = "Location not enabled.",
-                    isError = true,
-                    errorType = ErrorType.LocationNotEnabledError
-                )
-            } else {
+            }
+//            else if (!Utils().isLocationPermissionGranted()) {
+//                AnalyticsResponseModel(
+//                    message = "Permission to read the location of the device has been denied.",
+//                    isError = true,
+//                    errorType = ErrorType.LocationPermissionError
+//                )
+//            } else if (!Utils().isLocationEnabled()) {
+//                AnalyticsResponseModel(
+//                    message = "Location not enabled.",
+//                    isError = true,
+//                    errorType = ErrorType.LocationNotEnabledError
+//                )
+//            }
+            else {
                 AnalyticsResponseModel(
                     message = "An error occurred while submitting the request",
                     isError = true,
@@ -139,14 +140,11 @@ internal class AnalyticsRepository {
         phoneNumber: String?,
         bvn: String?,
     ): AnalyticsResponseModel {
-        val locationResult = LocationRepository().getUserLocationData()
-        if (locationResult.errorType != ErrorType.Null) {
-            return AnalyticsResponseModel(message = locationResult.message, isError =  true, errorType = locationResult.errorType)
-        }
+
         return try {
             val response = RetrofitInstance.api.updateMobileInsightV2(
                 overviewKey = overviewKey,
-                analyticsBody = getAnalyticsData(phoneNumber!!, bvn!!, publicKey,locationModel = locationResult.locationModel!!)
+                analyticsBody = getAnalyticsData(phoneNumber!!, bvn!!, publicKey)
                 )
             val data = response.execute()
             if(data.isSuccessful) {
@@ -173,19 +171,21 @@ internal class AnalyticsRepository {
                     isError = true,
                     errorType = ErrorType.SmsPermissionError
                 )
-            } else if (!Utils().isLocationPermissionGranted()) {
-                AnalyticsResponseModel(
-                    message = "Permission to read the location of the device has been denied.",
-                    isError = true,
-                    errorType = ErrorType.LocationPermissionError
-                )
-            } else if (!Utils().isLocationEnabled()) {
-                AnalyticsResponseModel(
-                    message = "Location not enabled.",
-                    isError = true,
-                    errorType = ErrorType.LocationNotEnabledError
-                )
-            } else {
+            }
+//            else if (!Utils().isLocationPermissionGranted()) {
+//                AnalyticsResponseModel(
+//                    message = "Permission to read the location of the device has been denied.",
+//                    isError = true,
+//                    errorType = ErrorType.LocationPermissionError
+//                )
+//            } else if (!Utils().isLocationEnabled()) {
+//                AnalyticsResponseModel(
+//                    message = "Location not enabled.",
+//                    isError = true,
+//                    errorType = ErrorType.LocationNotEnabledError
+//                )
+//            }
+            else {
                 AnalyticsResponseModel(
                     message = "An error occurred while submitting the request",
                     isError = true,
@@ -199,7 +199,6 @@ internal class AnalyticsRepository {
         phoneNumber: String,
         bvn: String,
         publicKey: String,
-        locationModel: LocationModel
     ): AnalyticsModel {
         val packageManager = PericulumDependency.getApplicationContext().packageManager
         val packageInfo = packageManager.getPackageInfo(
@@ -221,7 +220,7 @@ internal class AnalyticsRepository {
                     bvn = bvn
                 )
             ),
-            location = locationModel
+//            location = locationModel
         )
     }
 
