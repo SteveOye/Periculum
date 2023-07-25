@@ -2,13 +2,15 @@ package com.periculum.internal.repository
 
 import android.database.Cursor
 import android.net.Uri
+import com.periculum.internal.models.SenderAddress
+import com.periculum.internal.models.SenderAddressItem
 import com.periculum.internal.models.SmsDataModel
 import com.periculum.internal.utils.PericulumDependency
 import java.util.*
 
 internal class SmsRepository {
 
-    internal suspend fun getSmsDataFromDevice() : List<SmsDataModel> {
+    internal suspend fun getSmsDataFromDevice(sendersList: ArrayList<SenderAddressItem>?) : List<SmsDataModel> {
         val smsList = mutableListOf<SmsDataModel>()
         val inboxURI: Uri = Uri.parse("content://sms/inbox")
         val calendar: Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
@@ -18,7 +20,7 @@ internal class SmsRepository {
             arrayOf("_id", "thread_id", "address", "date", "date_sent", "protocol", "read", "status", "type", "reply_path_present", "body", "locked", "sub_id", "error_code", "creator", "seen"), "date>=$lastSixMonthsInMillis", null, null)!!
 
         while (cursor.moveToNext()) {
-            val smsData = SmsDataModel(
+            val smsData: SmsDataModel = SmsDataModel(
                 id = cursor.getString(0).toInt(),
                 threadId = cursor.getString(1).toInt(),
                 address = cursor.getString(2),
@@ -36,7 +38,13 @@ internal class SmsRepository {
                 creator = cursor.getString(14),
                 seen = cursor.getString(15).toInt(),
             )
-            smsList.add(smsData)
+
+            if (sendersList != null) {
+                for (i in 0 until sendersList.size) {
+                    if(smsData.address.contains(sendersList[i].address, ignoreCase = true))
+                        smsList.add(smsData)
+                }
+            }
         }
         cursor.close()
 
