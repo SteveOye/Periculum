@@ -36,21 +36,7 @@ internal class PericulumManager {
                         errorType = ErrorType.SmsPermissionError
                     )
                 }
-//                else if (!Utils().isLocationPermissionGranted()) {
-//                    Response(
-//                        message = "Permission to read the location of the device has been denied.",
-//                        responseBody = null,
-//                        isError = true,
-//                        errorType = ErrorType.LocationPermissionError
-//                    )
-//                } else if (!Utils().isLocationEnabled()) {
-//                    Response(
-//                        message = "Location not enabled.",
-//                        responseBody = null,
-//                        isError = true,
-//                        errorType = ErrorType.LocationNotEnabledError
-//                    )
-//                }
+
                 else {
                     val analyticsResponse = AnalyticsRepository()
                         .mobileAnaylticsV1(publicKey, phoneNumber, bvn)
@@ -80,14 +66,6 @@ internal class PericulumManager {
                         responseBody = null
                     )
                 }
-//                else if (!Utils().isLocationEnabled()) {
-//                    Response(
-//                        message = "Location not enabled.",
-//                        isError = true,
-//                        errorType = ErrorType.LocationNotEnabledError,
-//                        responseBody = null
-//                    )
-//                }
             else {
                     Response(
                         message = "Error Occurred",
@@ -124,22 +102,6 @@ internal class PericulumManager {
                         errorType = ErrorType.SmsPermissionError
                     )
                 }
-//                else if (!Utils().isLocationPermissionGranted()) {
-//                    Response(
-//                        message = "Permission to read the location of the device has been denied.",
-//                        responseBody = null,
-//                        isError = true,
-//                        errorType = ErrorType.LocationPermissionError
-//                    )
-//                }
-//                else if (!Utils().isLocationEnabled()) {
-//                    Response(
-//                        message = "Location not enabled.",
-//                        responseBody = null,
-//                        isError = true,
-//                        errorType = ErrorType.LocationNotEnabledError
-//                    )
-//                }
                 else {
                     val analyticsResponse = AnalyticsRepository()
                         .mobileInsightV2(publicKey, phoneNumber, bvn)
@@ -169,14 +131,6 @@ internal class PericulumManager {
                         responseBody = null
                     )
                 }
-//                else if (!Utils().isLocationEnabled()) {
-//                    Response(
-//                        message = "Location not enabled.",
-//                        isError = true,
-//                        errorType = ErrorType.LocationNotEnabledError,
-//                        responseBody = null
-//                    )
-//                }
             else {
                     Response(
                         message = "Error Occurred",
@@ -213,22 +167,6 @@ internal class PericulumManager {
                         errorType = ErrorType.SmsPermissionError
                     )
                 }
-//                else if (!Utils().isLocationPermissionGranted()) {
-//                    Response(
-//                        message = "Permission to read the location of the device has been denied.",
-//                        responseBody = null,
-//                        isError = true,
-//                        errorType = ErrorType.LocationPermissionError
-//                    )
-//                }
-//                else if (!Utils().isLocationEnabled()) {
-//                    Response(
-//                        message = "Location not enabled.",
-//                        responseBody = null,
-//                        isError = true,
-//                        errorType = ErrorType.LocationNotEnabledError
-//                    )
-//                }
                 else {
                     val analyticsResponse = AnalyticsRepository()
                         .updateMobileInsightV2(publicKey, overviewKey, phoneNumber!!, bvn!!)
@@ -258,14 +196,6 @@ internal class PericulumManager {
                         responseBody = null
                     )
                 }
-//                else if (!Utils().isLocationEnabled()) {
-//                    Response(
-//                        message = "Location not enabled.",
-//                        isError = true,
-//                        errorType = ErrorType.LocationNotEnabledError,
-//                        responseBody = null
-//                    )
-//                }
                 else {
                     Response(
                         message = "Error Occurred",
