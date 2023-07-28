@@ -235,7 +235,7 @@ internal class AnalyticsRepository {
         println(Build.MODEL)
         return DeviceModel(
             device = Build.DEVICE,
-            deviceId = "ur8egn8",
+            deviceId = Build.ID,
             deviceName = Build.MODEL,
             firstInstallTime = packageInfo.firstInstallTime,
             baseOs = Build.VERSION.BASE_OS,
@@ -248,7 +248,7 @@ internal class AnalyticsRepository {
             manufacturer = Build.MANUFACTURER,
             maxMemory = Runtime.getRuntime().maxMemory(),
             readableVersion = packageInfo.versionName,
-            uniqueId = "v77b77b7g8",
+            uniqueId = Utils().getDeviceUniqueId(),
             isTablet = Utils().isTablet(),
             camera = getCameraDetails(),
             network = getNetworkDetails()
